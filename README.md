@@ -20,6 +20,8 @@ so it needs an internet connection but no build step.
 
 What the page does:
 
+- Available in English, Simplified Chinese, Traditional Chinese and Korean, with a language switch at the top of both pages.
+- Tap the piano to open the second page, with the 3D model of the piano and its action.
 - Orbit, zoom and tap any microphone for its role, height, distance and aim.
 - One-tap views: overview, top (like the original sketch), from the seats, behind each
   microphone, and the pianist's view.
