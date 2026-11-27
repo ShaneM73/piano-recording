@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Piano Recording Setup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm, precise studio session plan for students
+   IDEA: a stage plot you can walk around — the engineer's sketch made solid
+   PICTURE: the 3D stage itself, Steinway, stands, cables, pickup cones
+   COLOUR and TYPE: paper-white ground, black lacquer piano, three signal colours (one per stereo pair); Archivo
+   LAYOUT: modest title, big model, view + layer controls, then mic card, track list, checklist */
+:root{color-scheme:light dark;--bg:light-dark(#f6f4f0,#111214);--ink:light-dark(#16171a,#ecebe8);--muted:light-dark(#5b5d64,#a3a4a8);--line:light-dark(#dcd7ce,#2c2d31);--card:light-dark(#fff,#18191c);--main:#e4412b;--pair:#2b5fd9;--room:#0f8b8d}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(20px,3vw,40px) max(5vw,16px);max-width:1240px;margin:0 auto}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.05;font-stretch:112%;font-weight:800;margin:0 0 8px;text-wrap:balance}
+h2{font-size:20px;margin:0 0 10px;font-weight:700}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.fig{position:relative;height:clamp(380px,64vh,660px);border-radius:14px;overflow:hidden;background:light-dark(#e9e5de,#1a1b1e);touch-action:none}
+.fig canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.labels{position:absolute;inset:0;pointer-events:none}
+.lb{position:absolute;left:0;top:0;transform:translate(-50%,-100%);white-space:nowrap;font-size:13px;font-weight:600;padding:3px 8px;border-radius:999px;background:light-dark(rgba(255,255,255,.92),rgba(20,21,24,.9));color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18);pointer-events:auto;cursor:pointer;border:2px solid transparent}
+.lb i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+.lb.on{border-color:currentColor}
+.lb.dim{font-weight:500;font-size:13px;background:light-dark(rgba(22,23,26,.82),rgba(236,235,232,.88));color:light-dark(#fff,#111);pointer-events:none;transform:translate(-50%,-50%)}
+.lb.zone{background:none;box-shadow:none;color:var(--muted);font-weight:700;pointer-events:none}
+.hide-dims .lb.dim,.hide-labels .lb:not(.dim){display:none}
+.meters{position:absolute;right:10px;top:10px;width:190px;padding:10px 12px;border-radius:10px;font-size:13px;background:light-dark(rgba(255,255,255,.92),rgba(20,21,24,.9));color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.2);pointer-events:none}
+.meters[hidden]{display:none}.meters b{display:block;margin-bottom:6px}.meters div{display:grid;grid-template-columns:86px minmax(0,1fr);align-items:center;gap:8px;margin:4px 0}
+.meters i{display:block;height:8px;border-radius:4px;background:light-dark(#e3dfd6,#33343a);overflow:hidden}.meters u{display:block;height:100%;width:0;border-radius:4px}
+.hint{position:absolute;left:12px;bottom:10px;font-size:13px;color:var(--muted);pointer-events:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.bar span{font-size:13px;color:var(--muted);margin-right:2px}
+button{font:inherit;font-size:15px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:3px solid var(--pair);outline-offset:2px}
+.sep{flex-basis:100%;height:0}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px}
+@media(max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h3{margin:0 0 4px;font-size:22px;line-height:1.15}
+.tag{font-size:13px;font-weight:700;margin:0 0 10px}
+.card dl{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:6px 12px;margin:14px 0 0;font-size:15px}
+.card dt{color:var(--muted)}.card dd{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chips button{font-size:14px;min-height:40px}
+.chips button i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--muted);font-weight:600}
+td.n{white-space:nowrap;font-weight:600}
+ol{margin:0;padding-left:1.3em}ol li{margin:6px 0}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+.err{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted)}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--muted)}.stack td:empty{display:none}.card dl{grid-template-columns:minmax(0,1fr)}.card dt{margin-top:6px}}
+</style>
+<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+</head>
+<body>
+<div class="band">
+  <h1>Piano solo recording setup</h1>
+  <p class="sub">C. Minor Recital Hall (Ellis 220), Missouri State University: about 250 seats, raked above a lower stage, with a 9-ft Steinway. Three stereo pairs, six tracks, every mic at 1.5 m (ear height). Drag to orbit, pinch or scroll to zoom, tap a mic for details.</p>
+</div>
+<div class="band" style="padding-top:0">
+  <div class="fig" id="fig"><div class="labels" id="labels"></div><div class="hint">Distances in metres</div></div>
+  <div class="bar" id="views"><span>View</span>
+    <button data-v="overview" aria-pressed="true">Overview</button>
+    <button data-v="top">Top (like the sketch)</button>
+    <button data-v="audience">From the seats</button>
+    <button data-v="main">Behind H6 #1</button>
+    <button data-v="pair">Behind the C214s</button>
+    <button data-v="pianist">Pianist</button>
+  </div>
+  <div class="bar" id="layers"><span>Show</span>
+    <button data-l="lid" aria-pressed="true">Lid open</button>
+    <button data-l="cones" aria-pressed="true">Pickup patterns</button>
+    <button data-l="dims" aria-pressed="true">Measurements</button>
+    <button data-l="labels" aria-pressed="true">Labels</button>
+    <button data-l="cables" aria-pressed="true">Cables</button>
+    <button data-l="hall" aria-pressed="true">Hall walls</button>
+  </div>
+  <div class="bar" id="wavebar"><span>Sound</span>
+    <button id="wavebtn" aria-pressed="false">Play sound waves</button>
+    <button id="sndbtn" aria-pressed="true">Piano sound</button>
+  </div>
+  <p class="note">Sound waves play in slow motion, about 85 times slower than real sound, which crosses this hall in roughly 0.06 seconds. White rings are the direct sound from the soundboard, brighter toward the open lid. Blue rings are the first reflections from the walls. The bars show the relative level reaching each microphone before any gain is added. The piece is the opening of Bach's Prelude in C major (BWV 846), synthesised in the browser.</p>
+  <p class="note">The shaded pickup fields show where each microphone hears best. They are not hard edges: sound from outside a field is still recorded, only quieter. The piano, microphones and recorders are drawn to their real sizes. The hall is approximate: its capacity (about 250), raked seating, organ behind the platform and wood side walls follow published descriptions, but its exact dimensions and finishes are not published.</p>
+</div>
+<div class="band grid" style="padding-top:8px">
+  <div>
+    <div class="chips" id="chips"></div>
+    <div class="card" id="info"></div>
+  </div>
+  <div>
+    <div class="card">
+      <h2>Track list</h2>
+      <table class="stack">
+        <thead><tr><th>Recorder</th><th>Track</th><th>Source</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td class="n">H6 #1</td><td class="n">X/Y L + R</td><td>Built-in X/Y</td><td>Main image, 120°, aimed at the sweet spot</td></tr>
+          <tr><td class="n">H6 #1</td><td class="n">Input 3</td><td>AKG C214 L</td><td>Bass side, beyond the tail</td></tr>
+          <tr><td class="n">H6 #1</td><td class="n">Input 4</td><td>AKG C214 R</td><td>Treble side, beyond the tail</td></tr>
+          <tr><td class="n">H6 #2</td><td class="n">X/Y L + R</td><td>Built-in X/Y</td><td>Hall reverb ("echo"), 120°, facing backward</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <h2>Before you press record</h2>
+      <ol>
+        <li>Turn on 48 V phantom power for inputs 3 and 4 on H6 #1, and use external power if you can.</li>
+        <li>Put the lid on full stick, then find the sweet spot on headphones while someone plays.</li>
+        <li><strong>Check levels on both H6s.</strong> Have the pianist play the loudest passage of the piece at full performance strength. Set each gain knob (X/Y capsule, inputs 3 and 4 on H6 #1, X/Y on H6 #2) so the peaks hit about −12 dB and never pass −6 dB. Players often play louder in the concert than in the soundcheck, so this leaves room. If the clip light comes on, turn the gain down and test again.</li>
+        <li>Start both H6s, then clap once in front of the piano. Clap again at the end so the tracks can be synced in editing.</li>
+        <li>Blend levels and timing later in the mix.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+{
+const fig=document.getElementById('fig'),labelsEl=document.getElementById('labels');
+const C={main:'#e4412b',pair:'#2b5fd9',room:'#0f8b8d',piano:'#3a3a3e'};
+const INFO={
+ piano:{name:'Steinway concert grand',color:C.piano,tag:'The source',rows:[['Size','≈2.74 m long × 1.57 m wide (Model D)'],['Keyboard','Stage left, about 1.22 m wide (88 keys)'],['Bass strings','Along the straight side, toward the back of the stage'],['Lid','Open on full stick, facing the audience over the curved side']],text:'The keyboard is on the left, the tail points right, and the open lid throws the sound out over the curved side toward the seats.'},
+ h6a:{name:'Zoom H6 #1',color:C.main,tag:'Main recorder and preamp · 4 tracks',rows:[['Capsule','Built-in X/Y set to 120°, facing forward'],['Shaded field','The pair covers 120° in total. The two mics overlap in the middle, so the sweet spot is picked up by both'],['Height','1.5 m'],['Place','≈1.83 m (6 ft) out from the curved side, shifted a little to the right (toward the tail)'],['Aim','Tilted slightly left onto the sweet spot, the middle of the open lid'],['Also','Preamp and 48 V phantom for both C214s. Inputs 3 and 4 are both on the right side of the recorder, 3 above 4']],text:'This is the main stereo image. The 120° setting gives a wider picture than 90°. Fine-tune the height and angle on headphones.'},
+ c214L:{name:'AKG C214 · L',color:C.pair,tag:'Spaced pair · Input 3 on H6 #1',rows:[['Pattern','Large-diaphragm cardioid'],['Height','1.5 m'],['Distance','≈1.83 m (6 ft) beyond the tail'],['Side','Bass (back of the stage)'],['Aim','At the piano, angled slightly toward its centre']],text:'It is called L because it carries the bass, the way the pianist hears it. If you stand behind the pair facing the piano, this mic is on your right.'},
+ c214R:{name:'AKG C214 · R',color:C.pair,tag:'Spaced pair · Input 4 on H6 #1',rows:[['Pattern','Large-diaphragm cardioid'],['Height','1.5 m'],['Spacing','≈1.5–1.6 m from L, a little wider than the keyboard'],['Side','Treble (toward the audience)'],['Aim','At the piano, angled slightly toward its centre']],text:'The wide spacing gives a broad image. If the centre sounds thin, the H6 #1 X/Y fills it in the mix.'},
+ h6b:{name:'Zoom H6 #2',color:C.room,tag:'Room / "echo" · 2 tracks',rows:[['Capsule','Built-in X/Y set to 120°, facing backward (away from the stage)'],['Shaded field','The pair covers 120° in total, with the two mics overlapping in the middle'],['Height','1.5 m above the floor of its row'],['Place','In the raked seating, past the stage edge'],['Aim','Toward the back of the hall, to catch reflections rather than the direct piano sound']],text:'This recorder collects the hall’s reverb, which you blend in under the close mics. Facing it backward keeps the direct sound low. The exact row isn’t fixed in the plan, so the model shows an example position in the fourth row.'}
+};
+const ORDER=['piano','h6a','c214L','c214R','h6b'];
+let sel='h6a';
+function renderInfo(){
+  const d=INFO[sel];const el=document.getElementById('info');el.textContent='';
+  const h=document.createElement('h3');h.textContent=d.name;
+  const t=document.createElement('p');t.className='tag';t.style.color=d.color;t.textContent=d.tag;
+  const p=document.createElement('p');p.style.margin='0';p.textContent=d.text;
+  const dl=document.createElement('dl');
+  d.rows.forEach(([a,b])=>{const dt=document.createElement('dt');dt.textContent=a;const dd=document.createElement('dd');dd.textContent=b;dl.append(dt,dd)});
+  el.append(h,t,p,dl);
+  document.querySelectorAll('#chips button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===sel));
+  labels.forEach(l=>l.key&&l.el.classList.toggle('on',l.key===sel));
+}
+const chips=document.getElementById('chips');
+ORDER.forEach(k=>{const b=document.createElement('button');b.dataset.k=k;const i=document.createElement('i');i.style.background=INFO[k].color;b.append(i,INFO[k].name);b.onclick=()=>{select(k,true)};chips.append(b)});
+const labels=[];
+window.select=k=>{sel=k;renderInfo()};
+
+if(!window.THREE||!THREE.OrbitControls){const e=document.createElement('div');e.className='err';e.textContent='The 3D view could not load. Check your connection and reload.';fig.append(e);renderInfo();}
+else{
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+fig.prepend(renderer.domElement);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(45,1,0.05,150);
+const controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;controls.maxPolarAngle=Math.PI*0.495;controls.minDistance=0.4;controls.maxDistance=34;
+
+// soft studio reflections for the lacquer and metal
+try{const pm=new THREE.PMREMGenerator(renderer),es=new THREE.Scene();
+  es.add(new THREE.Mesh(new THREE.BoxGeometry(20,10,20),new THREE.MeshBasicMaterial({color:0x2b2622,side:THREE.BackSide})));
+  [[0,4.9,0,12,.1,6,0xfff4e0],[-9.9,1,0,.1,5,10,0x8a7a66],[9.9,1,2,.1,4,8,0x6a6058],[0,1,9.9,10,4,.1,0x9a8f84]].forEach(([x,y,z,w,h,d,c])=>{
+    const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshBasicMaterial({color:c}));m.position.set(x,y,z);es.add(m)});
+  scene.environment=pm.fromScene(es,0.03).texture;pm.dispose()}catch(e){}
+
+scene.add(new THREE.HemisphereLight(0xfff3e2,0x4a3a2c,0.42));
+const sun=new THREE.DirectionalLight(0xfff1dc,0.6);sun.position.set(-3,12,7);sun.target.position.set(0.5,0,0.5);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);sun.shadow.bias=-0.0004;Object.assign(sun.shadow.camera,{left:-9,right:9,top:9,bottom:-9,near:1,far:40});scene.add(sun,sun.target);
+
+const M=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.7,envMapIntensity:.35},o));
+const lacquer=new THREE.MeshPhysicalMaterial({color:0x060607,roughness:.12,metalness:0,clearcoat:1,clearcoatRoughness:.06,envMapIntensity:1.1});
+const brass=M('#b8923c',{metalness:.9,roughness:.3,envMapIntensity:1}),steel=M('#b9bdc2',{metalness:.9,roughness:.32,envMapIntensity:1}),dark=M('#26272b',{roughness:.5,metalness:.3});
+const box=(w,h,d)=>new THREE.BoxGeometry(w,h,d),cyl=(a,b,h,s=20)=>new THREE.CylinderGeometry(a,b,h,s);
+const add=(geo,mat,parent,x=0,y=0,z=0,sh=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=sh;m.receiveShadow=true;parent.add(m);return m};
+const UP=V(0,1,0);
+function rod(a,b,r,mat,parent){const m=add(cyl(r,r,1,10),mat,parent);m.position.copy(a).add(b).multiplyScalar(.5);m.scale.y=a.distanceTo(b);m.quaternion.setFromUnitVectors(UP,b.clone().sub(a).normalize());return m}
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+function tex(w,h,draw,rx,ry){const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'),w,h);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);return t}
+function wood(base,dk,planks,vert){return (g,w,h)=>{g.fillStyle=base;g.fillRect(0,0,w,h);
+  for(let i=0;i<260;i++){g.globalAlpha=.05+rnd()*.08;g.fillStyle=rnd()>.5?dk:'#ffffff';const a=rnd()*(vert?w:h),l=40+rnd()*200,p=rnd()*(vert?h:w);if(vert)g.fillRect(a,p,1.5,l);else g.fillRect(p,a,l,1.5)}
+  g.globalAlpha=.55;g.fillStyle=dk;for(let i=0;i<planks;i++){const p=i*(vert?w:h)/planks;if(vert)g.fillRect(p,0,2,h);else g.fillRect(0,p,w,2)}g.globalAlpha=1}}
+
+// ---------- Hall (proportions approximate) ----------
+const hall=new THREE.Group(),upper=new THREE.Group();scene.add(hall);hall.add(upper);
+const X0=-7.7,X1=8.3,Z0=-4.3,Z1=15.6,HC=9,CX=(X0+X1)/2,W=X1-X0;
+const STAGE_FRONT=4.0,ROW0=4.9,ROWD=0.95,NROW=11,rowY=r=>r*0.33;
+const plane=(w,h,mat,x,y,z,rx,ry,parent)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);m.position.set(x,y,z);m.rotation.set(rx,ry,0);m.receiveShadow=true;parent.add(m);return m};
+plane(W,STAGE_FRONT-Z0,M('#ffffff',{map:tex(512,512,wood('#a97d4c','#5a3c1e',10,false),7,4),roughness:.45,envMapIntensity:.25}),CX,0,(Z0+STAGE_FRONT)/2,-Math.PI/2,0,scene);
+const carpet=M('#4a4f58',{roughness:.95});
+plane(W,ROW0-.5+ROWD-STAGE_FRONT,carpet,CX,.002,(STAGE_FRONT+ROW0-.5+ROWD)/2,-Math.PI/2,0,scene);
+for(let r=1;r<NROW;r++)add(box(W,rowY(r),ROWD),carpet,scene,CX,rowY(r)/2,ROW0-.5+r*ROWD+ROWD/2);
+{const z=ROW0-.5+NROW*ROWD;add(box(W,rowY(NROW-1),Z1-z),carpet,scene,CX,rowY(NROW-1)/2,(z+Z1)/2)}
+{ // seats: two blocks of 11 with a centre aisle
+  const pos=[];for(let r=0;r<NROW;r++)for(let k=0;k<11;k++){pos.push([-6.42+k*.56,ROW0+r*ROWD,rowY(r)],[1.38+k*.56,ROW0+r*ROWD,rowY(r)])}
+  const fab=M('#7c2530',{roughness:.9}),n=pos.length;
+  const cu=new THREE.InstancedMesh(box(.5,.1,.45),fab,n),bk=new THREE.InstancedMesh(box(.5,.6,.08),fab,n),bs=new THREE.InstancedMesh(box(.44,.37,.3),dark,n);
+  const d=new THREE.Object3D();pos.forEach(([x,z,y],i)=>{d.rotation.set(0,0,0);d.position.set(x,y+.42,z);d.updateMatrix();cu.setMatrixAt(i,d.matrix);
+    d.position.set(x,y+.185,z+.03);d.updateMatrix();bs.setMatrixAt(i,d.matrix);d.position.set(x,y+.75,z+.25);d.rotation.set(.14,0,0);d.updateMatrix();bk.setMatrixAt(i,d.matrix)});
+  cu.castShadow=bk.castShadow=true;cu.receiveShadow=bk.receiveShadow=true;scene.add(cu,bk,bs);
+}
+{ // walls face inward only, so the camera can look in from outside
+  const slat=M('#ffffff',{map:tex(512,256,wood('#a8733f','#4f3018',24,true),6,1),roughness:.6});
+  plane(Z1-Z0,HC,slat,X0,HC/2,(Z0+Z1)/2,0,Math.PI/2,hall);plane(Z1-Z0,HC,slat,X1,HC/2,(Z0+Z1)/2,0,-Math.PI/2,hall);
+  plane(W,HC,M('#d8d0c0',{roughness:.9}),CX,HC/2,Z0,0,0,hall);plane(W,2.62,slat.clone(),CX,1.31,Z0+.02,0,0,hall);
+  plane(W,HC,M('#5b5148',{roughness:.9}),CX,HC/2,Z1,0,Math.PI,hall);plane(W,Z1-Z0,M('#cfc9bd',{roughness:.95}),CX,HC,(Z0+Z1)/2,Math.PI/2,0,hall);
+  // pipe organ behind the platform
+  const oak=M('#6e4a2a',{roughness:.6});
+  add(box(8.4,4.9,.05),M('#1d1a18'),hall,CX,5.2,Z0+.12,false);add(box(8.7,.25,.9),oak,hall,CX,2.75,Z0+.5,false);add(box(8.7,.3,.9),oak,hall,CX,7.8,Z0+.5,false);
+  [-4.22,4.22].forEach(dx=>add(box(.25,4.9,.85),oak,hall,CX+dx,5.25,Z0+.48,false));
+  const N=49,pipes=new THREE.InstancedMesh(cyl(.06,.06,1,12),M('#c9c7bf',{metalness:.85,roughness:.28,envMapIntensity:1}),N),d=new THREE.Object3D();
+  for(let i=0;i<N;i++){const h=1.6+2.6*Math.abs(Math.cos(i/(N-1)*Math.PI*3));d.position.set(CX-3.84+i*.16,2.88+h/2,Z0+.55);d.scale.set(1,h,1);d.updateMatrix();pipes.setMatrixAt(i,d.matrix)}
+  hall.add(pipes);
+  // ceiling reflectors and lighting catwalk
+  const cloud=M('#e9e4d8',{roughness:.9});[-5.2,0,5.2].forEach(dx=>{add(box(4.6,.08,2.6),cloud,upper,CX+dx,7.4,.5,false).rotation.x=.12});
+  const cz=5.6,cy=7.3,iron=M('#2a2a2c');add(box(W,.06,1),iron,upper,CX,cy,cz,false);[-.5,.5].forEach(dz=>add(box(W,.05,.05),iron,upper,CX,cy+1,cz+dz,false));
+  for(let i=0;i<8;i++){add(cyl(.11,.13,.3,12),iron,upper,X0+1.5+i*1.86,cy-.3,cz-.5,false).rotation.x=.5}
+}
+
+// ---------- Steinway concert grand (2.74 m x 1.57 m) ----------
+const pianoG=new THREE.Group();pianoG.userData.key='piano';scene.add(pianoG);
+function outline(t,x0,T){const p=T||((x,y)=>[x,y]);t.moveTo(...p(x0,-.78));t.lineTo(...p(x0,.78));t.lineTo(...p(1.2,.78));
+  t.quadraticCurveTo(...p(1.42,.78),...p(1.40,.55));t.quadraticCurveTo(...p(1.36,.30),...p(1.0,.18));
+  t.bezierCurveTo(...p(.5,0),...p(.1,-.45),...p(-.3,-.70));t.quadraticCurveTo(...p(-.55,-.78),...p(-.8,-.78));t.lineTo(...p(x0,-.78));return t}
+const IN=(x,y)=>[.1+(x-.1)*.955,y*.92],FLAT=m=>{m.rotation.x=-Math.PI/2;return m};
+{const s=outline(new THREE.Shape(),-1.19);s.holes.push(outline(new THREE.Path(),-1.19,IN));
+  FLAT(add(new THREE.ExtrudeGeometry(s,{depth:.36,bevelEnabled:false,curveSegments:24}),lacquer,pianoG,0,.62,0));
+  FLAT(add(new THREE.ShapeGeometry(outline(new THREE.Shape(),-1.19),24),M('#0a0a0b',{side:THREE.DoubleSide}),pianoG,0,.635,0));
+  FLAT(add(new THREE.ShapeGeometry(outline(new THREE.Shape(),-1.19,IN),24),M('#a8843f',{metalness:.7,roughness:.45,envMapIntensity:.8}),pianoG,0,.885,0,false));
+  const pts=[];for(let i=0;i<64;i++){const t=i/63,z=-.62+t*1.24;pts.push(-.85,.905,z,1.25-1.6*Math.pow(t,.8),.905,z*.92)}
+  const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));pianoG.add(new THREE.LineSegments(sg,new THREE.LineBasicMaterial({color:0xe2e2e2})));
+  add(box(.05,.03,1.24),M('#1a1a1c'),pianoG,-.72,.925,0,false);
+  add(box(.3,.02,.9),lacquer,pianoG,-.97,.99,0);add(box(.02,.26,.75),lacquer,pianoG,-.95,1.12,0).rotation.z=-.22;
+  [-.75,.75].forEach(z=>add(box(.2,.26,.06),lacquer,pianoG,-1.28,.75,z));
+  add(box(.24,.08,1.44),lacquer,pianoG,-1.26,.66,0);add(box(.015,.03,1.44),lacquer,pianoG,-1.372,.715,0);
+  [-.665,.665].forEach(z=>add(box(.17,.06,.1),lacquer,pianoG,-1.275,.73,z));add(box(.02,.2,1.44),lacquer,pianoG,-1.185,.84,0);
+  const kw=1.22/52,d=new THREE.Object3D(),wk=new THREE.InstancedMesh(box(.15,.022,kw*.92),M('#f3f0e8',{roughness:.35,envMapIntensity:.7}),52),bz=[];
+  for(let i=0;i<52;i++){d.position.set(-1.27,.724,-.61+(i+.5)*kw);d.updateMatrix();wk.setMatrixAt(i,d.matrix);if(i<51&&'ACDFG'.includes('ABCDEFG'[i%7]))bz.push(-.61+(i+1)*kw)}
+  const bk=new THREE.InstancedMesh(box(.095,.012,.0125),M('#0c0c0d',{roughness:.3}),bz.length);bz.forEach((z,i)=>{d.position.set(-1.2425,.742,z);d.updateMatrix();bk.setMatrixAt(i,d.matrix)});pianoG.add(wk,bk);
+  [[-1.22,-.64],[-1.22,.64],[1.02,-.48]].forEach(([x,z])=>{add(box(.14,.1,.14),lacquer,pianoG,x,.57,z);add(cyl(.062,.045,.42,4),lacquer,pianoG,x,.31,z).rotation.y=Math.PI/4;
+    add(cyl(.02,.02,.06,10),brass,pianoG,x,.085,z);add(cyl(.032,.032,.05,14),brass,pianoG,x,.034,z).rotation.x=Math.PI/2});
+  [-.09,.09].forEach(z=>rod(V(-1.08,.62,z),V(-1.08,.16,z*.8),.014,lacquer,pianoG));add(box(.12,.07,.26),lacquer,pianoG,-1.1,.13,0);
+  [-.07,0,.07].forEach(z=>add(box(.11,.012,.035),brass,pianoG,-1.2,.1,z));rod(V(-1.06,.16,0),V(-.8,.62,0),.008,brass,pianoG);
+  add(box(.38,.07,.86),M('#141414',{roughness:.6}),pianoG,-1.95,.5,0);add(box(.34,.05,.8),lacquer,pianoG,-1.95,.44,0);
+  [[-.14,-.36],[-.14,.36],[.14,-.36],[.14,.36]].forEach(([dx,z])=>add(box(.045,.42,.045),lacquer,pianoG,-1.95+dx,.21,z));
+}
+const lidPivot=new THREE.Group();lidPivot.position.set(0,.985,-.78);pianoG.add(lidPivot);
+FLAT(add(new THREE.ExtrudeGeometry(outline(new THREE.Shape(),-.86),{depth:.028,bevelEnabled:false,curveSegments:24}),lacquer,lidPivot,0,0,.78));
+add(box(.33,.024,1.5),lacquer,lidPivot,-.695,.042,.78);
+const LID_OPEN=-0.72;let lidTarget=LID_OPEN;lidPivot.rotation.x=lidTarget;
+const prop=add(cyl(.011,.011,1,8),lacquer,pianoG);
+function placeProp(){const a=-lidPivot.rotation.x,A=V(-.35,.98,.62),B=V(-.35,.985+Math.sin(a)*1.4,-.78+Math.cos(a)*1.4);
+  prop.position.copy(A).add(B).multiplyScalar(.5);prop.scale.y=A.distanceTo(B);prop.quaternion.setFromUnitVectors(UP,B.clone().sub(A).normalize());prop.visible=a>.25}
+
+// ---------- Stands, recorders, microphones ----------
+const pickables=[pianoG],coneGroup=new THREE.Group(),cableGroup=new THREE.Group(),dimGroup=new THREE.Group();scene.add(coneGroup,cableGroup,dimGroup);
+function tripod(x,z,floorY,topY){const hub=floorY+.38,mid=Math.min(hub+.55,topY);
+  for(let i=0;i<3;i++){const a=i*2.094+.5;rod(V(x,hub,z),V(x+Math.cos(a)*.36,floorY+.012,z+Math.sin(a)*.36),.009,dark,scene)}
+  rod(V(x,floorY+.1,z),V(x,mid,z),.013,dark,scene);rod(V(x,mid-.05,z),V(x,topY,z),.009,steel,scene);add(cyl(.019,.019,.05,12),dark,scene,x,mid-.02,z)}
+function cone(at,dir,color,len=1.3,rad=.5,flat=1){const geo=new THREE.ConeGeometry(rad,len,40,1,true);geo.translate(0,-len/2,0);geo.rotateX(-Math.PI/2);geo.scale(1,flat,1);
+  const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color,transparent:true,opacity:.13,depthWrite:false,side:THREE.DoubleSide}));
+  m.position.copy(at);m.lookAt(at.clone().add(dir));coneGroup.add(m)}
+function rr(w,h,r){const s=new THREE.Shape(),P=Math.PI;s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.absarc(w/2-r,-h/2+r,r,-P/2,0,false);s.lineTo(w/2,h/2-r);s.absarc(w/2-r,h/2-r,r,0,P/2,false);
+  s.lineTo(-w/2+r,h/2);s.absarc(-w/2+r,h/2-r,r,P/2,P,false);s.lineTo(-w/2,-h/2+r);s.absarc(-w/2+r,-h/2+r,r,P,P*1.5,false);return s}
+const h6Body=M('#33363b',{roughness:.55,metalness:.2});
+function h6(key,p,floorY,target,color,half=Math.PI/3){ // Zoom H6: 78 x 153 x 48 mm, X/Y capsule at the front
+  const g=new THREE.Group();g.position.copy(p);g.userData.key=key;
+  add(new THREE.ExtrudeGeometry(rr(.078,.046,.009),{depth:.145,bevelEnabled:true,bevelSize:.003,bevelThickness:.003,bevelSegments:2}),h6Body,g,0,0,-.15);
+  add(new THREE.PlaneGeometry(.05,.036),M('#16323a',{emissive:'#2aa6c0',emissiveIntensity:.6}),g,0,.0265,-.115,false).rotation.x=-Math.PI/2;
+  [[-.022,-.05],[.022,-.05],[-.022,-.075],[.022,-.075]].forEach(([x,z])=>add(cyl(.008,.008,.008,14),steel,g,x,.028,z,false));
+  add(box(.086,.054,.012),M(color,{emissive:color,emissiveIntensity:.25}),g,0,0,-.02,false);
+  add(box(.06,.034,.03),dark,g,0,0,.012);
+  [1,-1].forEach(s=>{const cg=cyl(.0115,.0115,.05,16);cg.rotateX(Math.PI/2);cg.translate(0,0,.02);add(cg,steel,g,0,s*.0125,.02).rotation.y=s*half});
+  add(new THREE.TorusGeometry(.055,.0035,8,24,Math.PI),steel,g,0,0,.02,false).rotation.x=Math.PI/2;
+  if(key==='h6a')[-.045,-.085].forEach(z=>{add(cyl(.011,.011,.03,12),dark,g,-.05,0,z,false).rotation.z=Math.PI/2}); // inputs 3 (nearer the mics) and 4, both on the right side
+  add(new THREE.SphereGeometry(.014,12,10),dark,g,0,-.036,-.08);
+  g.lookAt(target);scene.add(g);g.updateMatrixWorld(true);
+  const b=g.localToWorld(V(0,-.05,-.08));tripod(b.x,b.z,floorY,b.y);
+  const dir=target.clone().sub(p).normalize(),ov=5*Math.PI/180,ch=(half+ov)/2,len=1.9;[1,-1].forEach(s=>cone(p,dir.clone().applyAxisAngle(UP,s*(half-ch)),color,len,len*Math.tan(ch),.4));
+  pickables.push(g);return g}
+function c214(key,p,target,color){ // AKG C214: side-address, 160 x 56 mm, in a shock mount
+  const g=new THREE.Group();g.position.copy(p);g.userData.key=key;
+  const body=M('#3d4046',{metalness:.6,roughness:.4,envMapIntensity:.9}),grille=M('#aeb2b6',{metalness:.8,roughness:.5,envMapIntensity:1});
+  add(cyl(.026,.024,.09),body,g,0,-.045,0).scale.z=.72;add(cyl(.0285,.0285,.006),dark,g,0,.003,0).scale.z=.72;
+  add(cyl(.028,.028,.06),grille,g,0,.035,0).scale.z=.72;add(new THREE.SphereGeometry(.028,18,12),grille,g,0,.065,0).scale.set(1,.45,.72);
+  add(new THREE.CircleGeometry(.007,16),new THREE.MeshBasicMaterial({color}),g,0,-.05,.0195,false);
+  add(cyl(.011,.011,.035,12),dark,g,0,-.108,0);
+  [-.012,-.085].forEach(y=>{add(new THREE.TorusGeometry(.046,.004,8,28),dark,g,0,y,0,false).rotation.x=Math.PI/2});
+  for(let i=0;i<4;i++){const a=i*Math.PI/2+.78;rod(V(Math.cos(a)*.046,-.012,Math.sin(a)*.046),V(Math.cos(a)*.046,-.085,Math.sin(a)*.046),.003,dark,g)}
+  rod(V(0,-.085,-.046),V(0,-.16,-.075),.006,dark,g);add(new THREE.SphereGeometry(.012,10,8),dark,g,0,-.16,-.075);
+  g.lookAt(V(target.x,p.y,target.z));scene.add(g);g.updateMatrixWorld(true);
+  const b=g.localToWorld(V(0,-.17,-.075));tripod(b.x,b.z,0,b.y);
+  cone(p.clone().add(V(0,.03,0)),target.clone().sub(p),color);pickables.push(g);return g}
+
+const SEAT_Y=rowY(3);
+const P={h6a:V(0.3,1.5,2.06),c214L:V(3.2,1.5,-0.78),c214R:V(3.2,1.5,0.78),h6b:V(0.3,SEAT_Y+1.5,ROW0+3*ROWD)};
+const SWEET=V(0.0,1.3,0.12);
+const gA=h6('h6a',P.h6a,0,SWEET,C.main);
+const gL=c214('c214L',P.c214L,V(0.3,1.1,0),C.pair),gR=c214('c214R',P.c214R,V(0.3,1.1,0),C.pair);
+h6('h6b',P.h6b,SEAT_Y,V(0.3,SEAT_Y+1.5,40),C.room); // faces backward, away from the stage
+add(new THREE.SphereGeometry(.05,20,14),new THREE.MeshBasicMaterial({color:C.main}),coneGroup,SWEET.x,SWEET.y,SWEET.z,false);
+{const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([P.h6a,SWEET]),new THREE.LineDashedMaterial({color:C.main,dashSize:.06,gapSize:.05}));l.computeLineDistances();coneGroup.add(l)}
+
+// XLR cables: C214 L to input 3, C214 R to input 4 of H6 #1
+const cableMat=M('#151517',{roughness:.8});
+function cable(pts){add(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,false,'catmullrom',.25),140,.006,6),cableMat,cableGroup)}
+{const bL=gL.localToWorld(V(0,-.126,0)),bR=gR.localToWorld(V(0,-.126,0)),pA=gA.localToWorld(V(-.066,0,-.045)),pB=gA.localToWorld(V(-.066,0,-.085));
+  cable([bL,V(bL.x+.05,.9,bL.z+.02),V(3.22,.03,-.55),V(2.95,.012,.35),V(1.9,.012,1.85),V(1.0,.012,2.3),V(.62,.9,2.12),pA]);
+  cable([bR,V(bR.x+.05,.9,bR.z+.02),V(3.2,.03,1.0),V(2.5,.012,1.8),V(1.4,.012,2.55),V(.95,.012,2.6),V(.66,.9,2.22),pB])}
+
+// labels and measurements
+function addLabel(pos,text,opts={}){const el=document.createElement('div');el.className='lb'+(opts.cls?' '+opts.cls:'');
+  if(opts.color){const i=document.createElement('i');i.style.background=opts.color;el.append(i)}el.append(text);
+  if(opts.key){el.onclick=()=>select(opts.key,true)}labelsEl.append(el);labels.push({el,pos,key:opts.key})}
+function dim(a,b,text,lift){const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([a,b]),new THREE.LineDashedMaterial({color:0x111111,dashSize:.08,gapSize:.06}));
+  l.computeLineDistances();dimGroup.add(l);
+  [a,b].forEach(p=>{const t=new THREE.Mesh(new THREE.SphereGeometry(.025,10,8),new THREE.MeshBasicMaterial({color:0x111111}));t.position.copy(p);dimGroup.add(t)});
+  addLabel(a.clone().add(b).multiplyScalar(.5).add(lift||V(0,0,0)),text,{cls:'dim'})}
+dim(V(1.4,.02,-.78),V(3.2,.02,-.78),'1.83 m · 6 ft');
+dim(V(3.4,.02,-.78),V(3.4,.02,.78),'≈1.55 m apart',V(.25,0,0));
+dim(V(.3,.02,.23),V(.3,.02,2.06),'1.83 m · 6 ft',V(-.2,0,0));
+dim(V(.72,0,2.06),V(.72,1.5,2.06),'1.5 m high',V(.15,0,0));
+ORDER.forEach(k=>{const p=k==='piano'?V(-0.2,2.3,-0.5):P[k].clone().add(V(0,.3,0));addLabel(p,INFO[k].name,{color:INFO[k].color,key:k})});
+addLabel(V(0.0,1.52,0.12),'Sweet spot',{color:C.main});
+addLabel(V(5.6,.05,3.2),'Stage zone',{cls:'zone'});addLabel(V(5.6,rowY(1)+.05,ROW0+ROWD),'Seat zone (raked)',{cls:'zone'});
+
+function isDark(){const t=document.documentElement.dataset.theme;if(t)return t==='dark';return matchMedia('(prefers-color-scheme: dark)').matches}
+function applyTheme(){scene.background=new THREE.Color(isDark()?'#1a1b1e':'#e9e5de')}
+applyTheme();new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
+
+// views
+const VIEWS={overview:[V(5.0,3.3,6.4),V(0.9,0.9,0.3)],top:[V(0.9,13,3.02),V(0.9,0,3.0)],audience:[V(-2.5,rowY(8)+1.5,ROW0+8*ROWD-.3),V(0.6,1.0,0)],
+  main:[V(0.42,1.72,2.95),V(0.0,1.15,0.1)],pair:[V(4.5,1.8,0),V(0.2,0.95,0)],pianist:[V(-2.25,1.5,0),V(0.6,0.75,0.2)]};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;let tween=null;
+function fly(pos,tgt){if(reduce){camera.position.copy(pos);controls.target.copy(tgt);return}
+  tween={p0:camera.position.clone(),t0:controls.target.clone(),p1:pos.clone(),t1:tgt.clone(),s:performance.now()}}
+camera.position.copy(VIEWS.overview[0]);controls.target.copy(VIEWS.overview[1]);
+document.querySelectorAll('#views button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#views button').forEach(x=>x.setAttribute('aria-pressed',x===b));const v=VIEWS[b.dataset.v];fly(v[0],v[1])});
+window.select=function(k,move){sel=k;renderInfo();if(move){const p=k==='piano'?V(0,1,0):P[k];
+  const off=k==='h6b'?V(1.2,.7,-1.6):k==='piano'?V(2.6,2.2,4.2):V(.9,.45,1.1);fly(p.clone().add(off),p.clone());
+  document.querySelectorAll('#views button').forEach(x=>x.setAttribute('aria-pressed','false'))}};
+document.querySelectorAll('#layers button').forEach(b=>b.onclick=()=>{const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);const l=b.dataset.l;
+  if(l==='lid')lidTarget=on?LID_OPEN:0;if(l==='cones')coneGroup.visible=on;if(l==='cables')cableGroup.visible=on;if(l==='hall')hall.visible=on;
+  if(l==='dims'){dimGroup.visible=on;fig.classList.toggle('hide-dims',!on)}if(l==='labels')fig.classList.toggle('hide-labels',!on)});
+
+// picking
+const ray=new THREE.Raycaster(),ptr=new THREE.Vector2();let down=null;
+renderer.domElement.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY]});
+renderer.domElement.addEventListener('pointerup',e=>{if(!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;
+  const r=renderer.domElement.getBoundingClientRect();ptr.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(ptr,camera);
+  const hit=ray.intersectObjects(pickables,true)[0];if(!hit)return;let o=hit.object;while(o&&!o.userData.key)o=o.parent;if(o)select(o.userData.key,false)});
+
+// ---------- Sound waves in slow motion ----------
+renderer.localClippingEnabled=true;
+const SRC=V(0.15,0.95,-0.05),CW=4,TILT=-0.195;
+const clip=[new THREE.Plane(V(1,0,0),-X0),new THREE.Plane(V(-1,0,0),X1),new THREE.Plane(V(0,0,1),-Z0),new THREE.Plane(V(0,0,-1),Z1),new THREE.Plane(V(0,1,0),-0.02),new THREE.Plane(V(0,-1,0),HC)];
+const ringGeo=new THREE.RingGeometry(.978,1,128,1);ringGeo.rotateX(-Math.PI/2);
+{const p=ringGeo.attributes.position,col=[];for(let i=0;i<p.count;i++){const d=.6+.4*p.getZ(i)/Math.hypot(p.getX(i),p.getZ(i));col.push(d,d,d)}ringGeo.setAttribute('color',new THREE.Float32BufferAttribute(col,3))}
+const shellGeo=new THREE.SphereGeometry(1,40,24),waveGroup=new THREE.Group();scene.add(waveGroup);
+// the direct sound plus one mirror-image source per wall gives the first reflections
+const WSRC=[{p:SRC,m:[1,1],k:1,c:0xffffff},{p:V(SRC.x,SRC.y,2*Z1-SRC.z),m:[1,-1],k:.6,c:0x7fe0ff},{p:V(SRC.x,SRC.y,2*Z0-SRC.z),m:[1,-1],k:.6,c:0x7fe0ff},
+  {p:V(2*X0-SRC.x,SRC.y,SRC.z),m:[-1,1],k:.6,c:0x7fe0ff},{p:V(2*X1-SRC.x,SRC.y,SRC.z),m:[-1,1],k:.6,c:0x7fe0ff}];
+const rings=[];
+function spawn(vel,accent){WSRC.forEach((s,i)=>{const h=new THREE.Group(),t=new THREE.Group();h.position.copy(s.p);h.scale.set(s.m[0],1,s.m[1]);t.rotation.x=TILT;h.add(t);
+  const mat=new THREE.MeshBasicMaterial({color:s.c,vertexColors:true,transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide,clippingPlanes:clip});
+  const m=new THREE.Mesh(ringGeo,mat);t.add(m);waveGroup.add(h);const o={h,m,mat,s,r:.05,vel,sph:null};
+  if(accent&&i===0){o.sph=new THREE.Mesh(shellGeo,new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide,clippingPlanes:clip}));o.sph.position.copy(s.p);waveGroup.add(o.sph)}
+  rings.push(o)})}
+const dA=SWEET.clone().sub(P.h6a).setY(0).normalize(),dC=p=>V(0.3,p.y,0).sub(p).normalize(),H60=Math.PI/3;
+const caps=[['Main XY · L',P.h6a,dA.clone().applyAxisAngle(UP,H60),C.main],['Main XY · R',P.h6a,dA.clone().applyAxisAngle(UP,-H60),C.main],
+  ['C214 · L',P.c214L,dC(P.c214L),C.pair],['C214 · R',P.c214R,dC(P.c214R),C.pair],
+  ['Room XY · L',P.h6b,V(0,0,1).applyAxisAngle(UP,H60),C.room],['Room XY · R',P.h6b,V(0,0,1).applyAxisAngle(UP,-H60),C.room]].map(([name,pos,axis,color])=>({name,pos,axis,color,level:0}));
+const meters=document.createElement('div');meters.className='meters';meters.hidden=true;fig.append(meters);
+{const h=document.createElement('b');h.textContent='Level reaching each mic';meters.append(h)}
+caps.forEach(c=>{const row=document.createElement('div'),l=document.createElement('span'),tr=document.createElement('i');c.bar=document.createElement('u');c.bar.style.background=c.color;l.textContent=c.name;tr.append(c.bar);row.append(l,tr);meters.append(row);
+  c.glow=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:c.color,transparent:true,opacity:0,depthWrite:false}));c.glow.position.copy(c.pos).addScaledVector(c.axis,.06);scene.add(c.glow)});
+// the piece: opening bars of Bach's Prelude in C major, BWV 846, synthesised here
+const BARS=[[60,64,67,72,76],[60,62,69,74,77],[59,62,67,74,77],[60,64,67,72,76]],PAT=[0,1,2,3,4,2,3,4],STEP=.24;
+let playing=false,sndOn=true,ac=null,master=null,wclock=0,wnext=0,wn=0;
+function tone(midi,vel){if(!ac||!sndOn||ac.state!=='running')return;const t=ac.currentTime,f=440*2**((midi-69)/12),g=ac.createGain();
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vel*.22,t+.008);g.gain.exponentialRampToValueAtTime(.0008,t+1.6);g.connect(master);
+  [['triangle',f,1],['sine',f*2,.3]].forEach(([type,fr,a])=>{const o=ac.createOscillator(),og=ac.createGain();o.type=type;o.frequency.value=fr;og.gain.value=a;o.connect(og);og.connect(g);o.start(t);o.stop(t+1.7)})}
+function stepWaves(dt){
+  if(playing){wclock+=dt;while(wclock>=wnext){const k=PAT[wn%8],vel=k===0?1:k===1?.8:.6;tone(BARS[Math.floor(wn/16)%4][k],vel);spawn(vel,wn%8===0);wn++;wnext+=STEP}}
+  for(let i=rings.length-1;i>=0;i--){const o=rings[i],r0=o.r;o.r+=CW*dt;const r=o.r,s=o.s,fade=r>23?Math.max(0,(26-r)/3):1;
+    o.m.scale.setScalar(r);o.mat.opacity=Math.min(.9,s.k*o.vel*Math.min(1,1.2/r)*1.6+.05)*fade;
+    if(o.sph){o.sph.scale.setScalar(r);o.sph.material.opacity=.07*Math.min(1,1.5/r)*fade}
+    caps.forEach(c=>{const d=c.pos.distanceTo(s.p);if(r0<d&&d<=r){const e=c.pos.clone().sub(s.p).normalize();
+      c.level+=s.k*o.vel*Math.min(1,1.2/d)*(.6+.4*e.z*s.m[1])*(1-e.dot(c.axis))/2*.9}});
+    if(r>26){waveGroup.remove(o.h);o.mat.dispose();if(o.sph){waveGroup.remove(o.sph);o.sph.material.dispose()}rings.splice(i,1)}}
+  caps.forEach(c=>{c.level*=Math.exp(-dt/.5);const v=Math.min(1,Math.sqrt(c.level)*1.1);c.bar.style.width=(v*100).toFixed(0)+'%';c.glow.scale.setScalar(.03+v*.2);c.glow.material.opacity=v*.6})}
+const wavebtn=document.getElementById('wavebtn'),sndbtn=document.getElementById('sndbtn');
+wavebtn.onclick=()=>{playing=!playing;wavebtn.setAttribute('aria-pressed',playing);wavebtn.textContent=playing?'Stop':'Play sound waves';meters.hidden=!playing&&!rings.length;
+  if(playing){meters.hidden=false;wnext=wclock;try{if(!ac){const A=window.AudioContext||window.webkitAudioContext;ac=new A();master=ac.createGain();master.gain.value=.5;master.connect(ac.destination)}ac.resume()}catch(e){ac=null}
+    fly(V(6.4,5.4,10.5),V(0.5,1.2,3));document.querySelectorAll('#views button').forEach(x=>x.setAttribute('aria-pressed','false'))}};
+sndbtn.onclick=()=>{sndOn=!sndOn;sndbtn.setAttribute('aria-pressed',sndOn)};
+
+// size + loop
+const ro=new ResizeObserver(()=>{const w=fig.clientWidth,h=fig.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()});ro.observe(fig);
+const tmp=new THREE.Vector3();let lastT=0;
+function loop(t){requestAnimationFrame(loop);const dt=Math.min(.05,Math.max(0,(t-lastT)/1000));lastT=t;stepWaves(dt);
+  if(tween){const k=Math.min(1,(t-tween.s)/900),e=k<.5?2*k*k:1-((-2*k+2)**2)/2;camera.position.lerpVectors(tween.p0,tween.p1,e);controls.target.lerpVectors(tween.t0,tween.t1,e);if(k>=1)tween=null}
+  lidPivot.rotation.x+=(lidTarget-lidPivot.rotation.x)*(reduce?1:.12);placeProp();
+  controls.update();upper.visible=camera.position.y<6.2;renderer.render(scene,camera);
+  const w=fig.clientWidth,h=fig.clientHeight;
+  labels.forEach(l=>{tmp.copy(l.pos).project(camera);const vis=tmp.z<1&&Math.abs(tmp.x)<1.05&&Math.abs(tmp.y)<1.05;l.el.style.visibility=vis?'visible':'hidden';
+    if(vis)l.el.style.transform=`translate(${(tmp.x*.5+.5)*w}px,${(-tmp.y*.5+.5)*h}px) translate(-50%,${l.el.classList.contains('dim')?'-50%':'-100%'})`})}
+requestAnimationFrame(loop);
+renderInfo();
+}
+}
+</script>
+</body>
+</html>
