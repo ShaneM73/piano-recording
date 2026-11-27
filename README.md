@@ -32,12 +32,14 @@ What the page does:
 `piano.html` is a second page: a concert grand you can open up, and one key's action in slow motion.
 
 - **Whole piano:** case and braces, soundboard with ribs and bridges, cast-iron plate, 236 strings with the bass strings crossing over the tenor, tuning pins, dampers, 88 hammers and keys. Hide any layer, make the case see-through, or pull the layers apart with the Explode slider. Tap a key to play it and watch its key, hammer, damper and strings move.
-- **Action of one key:** key, capstan, wippen, jack, let-off button, repetition lever, knuckle, hammer, backcheck, damper and string, animated through one key stroke. Play it or step through it with the slider.
+- **Action of one key:** key, capstan, wippen, jack, let-off button, repetition lever, knuckle, hammer, backcheck, damper lever, damper and three strings, animated through one key stroke. Play it or step through it with the slider.
+- **Pedals:** all three work in both views. The damper pedal lifts every damper through its rod, trap lever, pitman and tray. The sostenuto pedal holds only the dampers that are already up. The una corda pedal slides the keyframe so each hammer misses the left string of three.
 
 ![The piano's interior from above](piano-inside.png)
-![The action of one key just after the strike](piano-action.png)
+![The action with the sostenuto pedal holding the damper up](piano-action.png)
+![The action with the pedals and their rods](piano-pedals.png)
 
-The parts are modelled by hand to the real overall size and the standard grand action. Shapes and positions are simplified for teaching and are not a maker's drawings.
+The action uses Steinway's published regulation distances for the Model D (key dip 0.400 in, hammer blow 1-7/8 in, let-off 1/16 in, checking 15 mm) and lever lengths measured by piano technicians (17 mm knuckle, 130 mm shank, 62.5 and 93 mm wippen arms, 0.5 key ratio). The page lists every figure with its source. Part outlines, the key length and the pedal linkage under the keybed are simplified and are not Steinway drawings.
 
 ## The setup
 

@@ -76,6 +76,11 @@ input[type=range]{flex:1 1 220px;max-width:420px;min-height:44px;accent-color:va
     <button id="lblbtn" aria-pressed="true">Labels</button>
     <button id="sndbtn" aria-pressed="true">Sound</button>
   </div>
+  <div class="bar" id="pedals"><span>Pedals</span>
+    <button data-p="U" aria-pressed="false">Una corda (left)</button>
+    <button data-p="S" aria-pressed="false">Sostenuto (middle)</button>
+    <button data-p="D" aria-pressed="false">Damper (right)</button>
+  </div>
   <div id="wholeUI">
     <div class="bar" id="layers"><span>Show</span>
       <button data-l="lid" aria-pressed="true">Lid and music desk</button>
@@ -96,9 +101,14 @@ input[type=range]{flex:1 1 220px;max-width:420px;min-height:44px;accent-color:va
       <button id="strike" aria-pressed="false">Strike a note</button>
       <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Step through the key stroke">
     </div>
+    <div class="bar" id="aviews"><span>View</span>
+      <button data-v="close" aria-pressed="true">Close-up</button>
+      <button data-v="pedals" aria-pressed="false">With pedals</button>
+      <button data-v="hammer" aria-pressed="false">Hammer and strings</button>
+    </div>
     <p class="phase" id="phase"></p>
   </div>
-  <p class="note">The piano is modelled by hand to the real overall size of a concert grand, with 88 keys and hammers, 236 strings, and the standard double-escapement grand action. Part shapes and positions are simplified for teaching and are not a maker's drawings. The action plays about 30 times slower than a real key stroke, and string movement is exaggerated so it can be seen.</p>
+  <p class="note">The action is built to Steinway's published regulation distances for the Model D and to lever lengths measured by piano technicians, listed in the table below. Part outlines, the key length and the pedal linkage under the keybed are simplified and are not Steinway drawings. The action plays about 30 times slower than a real key stroke, and string movement is exaggerated so it can be seen.</p>
 </div>
 <div class="band grid" style="padding-top:8px">
   <div>
@@ -108,14 +118,41 @@ input[type=range]{flex:1 1 220px;max-width:420px;min-height:44px;accent-color:va
   <div class="card">
     <h2>What happens when a key goes down</h2>
     <ol>
-      <li>The key is a lever. Its front goes down about 10 mm and its back end rises.</li>
+      <li>The key is a lever. Its front goes down 10.2 mm and its back end rises about half as far.</li>
       <li>The capstan on the key lifts the wippen, which carries the jack.</li>
-      <li>The jack pushes the knuckle under the hammer shank, and the hammer swings up about 45 mm.</li>
-      <li>Just before the string, the jack's toe meets the let-off button. The jack slips out from under the knuckle, so the hammer flies the last 2 mm freely.</li>
+      <li>The jack pushes the knuckle under the hammer shank, and the hammer swings up toward the string, 47.6 mm above its rest position.</li>
+      <li>Just before the string, the jack's toe meets the let-off button. The jack slips out from under the knuckle, so the hammer flies the last 1.6 mm freely.</li>
       <li>The hammer strikes the string and bounces back at once, leaving the string free to ring. Meanwhile the back of the key has lifted the damper off the string.</li>
       <li>The backcheck catches the falling hammer. The repetition lever holds it part-way up, so the jack can slide back under and the note can be repeated quickly.</li>
       <li>When the key is released, everything returns and the damper drops onto the string and stops the sound.</li>
     </ol>
+  </div>
+</div>
+<div class="band" style="padding-top:0">
+  <div class="card">
+    <h2>Measurements used</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>Item</th><th>Value in the model</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td>Key dip</td><td class="n">0.400 in (10.2 mm)</td><td>Steinway technical reference: factory setting, range 0.390 to 0.420 in</td></tr>
+        <tr><td>Hammer blow distance</td><td class="n">1-7/8 in (47.6 mm)</td><td>Steinway technical reference: Models C and D</td></tr>
+        <tr><td>Let-off</td><td class="n">1/16 in (1.6 mm)</td><td>Steinway technical reference: between 1/32 and 1/16 in from the string</td></tr>
+        <tr><td>Aftertouch</td><td class="n">about 0.047 in (1.2 mm)</td><td>Steinway technical reference: 3/64 to 1/16 in</td></tr>
+        <tr><td>Checking</td><td class="n">15 mm below the string</td><td>Steinway technical reference, Hamburg procedure</td></tr>
+        <tr><td>Knuckle to shank pivot</td><td class="n">17 mm</td><td>Standard on Hamburg shanks, and on New York shanks since 1984</td></tr>
+        <tr><td>Shank pivot to hammer</td><td class="n">130 mm</td><td>Technicians' measurements of Steinway actions (127 to 144 mm reported)</td></tr>
+        <tr><td>Hammer bore</td><td class="n">48 mm</td><td>Technicians' measurement</td></tr>
+        <tr><td>Wippen: pivot to capstan, pivot to jack</td><td class="n">62.5 mm, 93 mm</td><td>Technicians' measurements (wippen ratio about 1.5)</td></tr>
+        <tr><td>Key ratio</td><td class="n">0.5</td><td>Technicians' measurements of modern Steinway keys</td></tr>
+        <tr><td>Action spread</td><td class="n">112.4 mm</td><td>Follows from the lever lengths above; close to the usual Steinway figure</td></tr>
+        <tr><td>Damper lever pivot height</td><td class="n">2-1/4 in (57 mm) above the keybed</td><td>Steinway technical reference, New York underlever assembly</td></tr>
+        <tr><td>Damper lift begins</td><td class="n">at half the hammer travel</td><td>Standard regulation rule</td></tr>
+        <tr><td>Dampers</td><td class="n">68 (notes 1 to 68)</td><td>Steinway technical reference, Hamburg (New York has 67)</td></tr>
+        <tr><td>Damper pedal free play</td><td class="n">about 3 mm at the tip</td><td>Common regulation check (1/8 in)</td></tr>
+        <tr><td>Una corda shift</td><td class="n">3.6 mm</td><td>Set so the hammer misses the left string of three, as Steinway specifies; the distance itself is my estimate</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Sources: <a href="https://www.indyptg.org/PTG/SteinwayServiceManuals/Chp2.pdf">Steinway World-Wide Technical Reference Guide, grand regulation</a>, <a href="https://www.indyptg.org/PTG/SteinwayServiceManuals/Chp6.pdf">specifications and service techniques</a>, and <a href="https://www.steinwayreference.com/action-regulation-specifications/">Steinway Reference: action regulation specifications</a>. Lever lengths come from discussions among Piano Technicians Guild members. With these levers the hammer would move 5.7 times as far as the key front; the model slows the wippen slightly so the hammer reaches let-off with the published aftertouch left over, as felt compression and lost motion do in a real action.</p>
   </div>
 </div>
 
@@ -137,25 +174,31 @@ const PARTS={
  keys:['Keys','Whole piano','52 white and 36 black keys. Each is a long wooden lever. Only the front 15 cm shows; the rest runs back under the fallboard to lift the action.'],
  rim:['Rim and braces','Whole piano','The curved case is bent from laminated hard maple. Heavy wooden braces underneath hold it rigid. A grand is open underneath, so the soundboard radiates both up and down.'],
  lid:['Lid','Whole piano','Open on its long stick, the lid reflects the upward sound out toward the audience over the curved side.'],
- key:['Key','Action','A wooden lever balanced on a pin in the balance rail. Pressing the front down about 10 mm raises the back end.'],
+ key:['Key','Action','A wooden lever balanced on a pin in the balance rail. Steinway sets the key dip at 0.400 in (10.2 mm). The capstan sits half as far behind the balance pin as the finger is in front of it, so the back of the key rises about half as far as the front goes down.'],
  capstan:['Capstan','Action','A brass screw on the key that lifts the wippen. Turning it adjusts how far the hammer rests below the string.'],
  wippen:['Wippen','Action','The lever between key and hammer. It is hinged at its back end and carries the jack and the repetition lever.'],
  jack:['Jack','Action','The L-shaped piece that pushes the hammer up through the knuckle. When its toe reaches the let-off button it swings out from under the knuckle. This is the escapement: it frees the hammer so it cannot stay pressed against the string.'],
- letoff:['Let-off button','Action','A fixed felt stop. It trips the jack when the hammer is about 2 mm from the string.'],
+ letoff:['Let-off button','Action','A fixed felt stop. It trips the jack when the hammer is 1/16 in (1.6 mm) from the string.'],
  replever:['Repetition lever','Action','A sprung lever on the wippen. After the strike it holds the hammer part-way up so the jack can get back under the knuckle before the key has fully risen. This "double escapement" is what allows fast repeated notes on a grand.'],
- knuckle:['Knuckle','Action','A small leather-covered roller under the hammer shank. The jack and the repetition lever push on it.'],
+ knuckle:['Knuckle','Action','A small leather-covered roller under the hammer shank, 17 mm from the shank pivot. The hammer is about 130 mm from the pivot, so it moves about 7.6 times as far as the jack pushes the knuckle.'],
  shank:['Hammer shank and flange','Action','The thin wooden arm that carries the hammer. It pivots on a pin in its flange, which is screwed to the hammer rail.'],
- hammer:['Hammer','Action','A wooden moulding covered with dense wool felt. It travels about 45 mm to the string and touches it for only a few thousandths of a second. The hardness of the felt shapes the tone.'],
- backcheck:['Backcheck','Action','A leather-covered pad on the back of the key. It catches the hammer as it falls back, so the hammer cannot bounce up and hit the string twice.'],
+ hammer:['Hammer','Action','A wooden moulding covered with dense wool felt. On a Model D it rests 1-7/8 in (47.6 mm) below the string and touches the string for only a few thousandths of a second. The hardness of the felt shapes the tone.'],
+ backcheck:['Backcheck','Action','A leather-covered pad on the back of the key. It catches the hammer as it falls back, about 15 mm below the string, so the hammer cannot bounce up and hit the string twice.'],
  damper:['Damper','Action','Felt resting on the string, lifted by the back of the key through the damper lever and wire. It lifts before the hammer strikes and stops the string when the key comes up.'],
  string:['String','Action','Stretched between the agraffe at the front and the bridge on the soundboard. The hammer strikes close to the front end, about one eighth of the way along.'],
+ underlever:['Damper lever','Action','The underlever. Its pivot sits 57 mm (2-1/4 in) above the keybed. The back of the key lifts its front end, and the damper wire stands on it. The key starts to lift it when the hammer is half-way to the string.'],
+ tray:['Damper tray','Action','A rail lying under all the damper levers. The damper pedal raises it, so every damper lifts at once.'],
+ sosrod:['Sostenuto rod','Action','A brass rod with a thin lip, running behind the dampers. When the middle pedal is pressed it turns, and its lip catches the tabs of the dampers that are already raised. Those notes keep ringing after their keys are released, while all the other dampers work normally.'],
+ pedalD:['Damper pedal (right)','Pedals','After about 3 mm of free play, the pedal pushes a rod up to a lever under the keybed. That lever raises a wooden dowel, the pitman, which lifts the damper tray and with it every damper. All strings are then free to ring, including strings that were not struck.'],
+ pedalS:['Sostenuto pedal (middle)','Pedals','Holds only the notes whose dampers are up at the moment the pedal goes down. Play a note, press the pedal while the key is still down, then let the key go: that damper stays up.'],
+ pedalU:['Una corda pedal (left)','Pedals','Slides the whole keyframe, with keys, action and hammers, a few millimetres toward the treble. Each hammer then misses the left string of its three, and strikes with a softer, less worn part of its felt. The tone becomes softer and thinner.'],
  agraffe:['Agraffe','Action','A brass stud screwed into the iron plate. The string passes through it, and it fixes the front end of the vibrating length.']
 };
 let sel='soundboard',mode='whole';
 function renderInfo(){const d=PARTS[sel];infoEl.textContent='';const h=document.createElement('h3'),t=document.createElement('p'),p=document.createElement('p');
   h.textContent=d[0];t.className='tag';t.textContent=d[1];p.style.margin='0';p.textContent=d[2];infoEl.append(h,t,p);
   chipsEl.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===sel))}
-function renderChips(){chipsEl.textContent='';Object.keys(PARTS).filter(k=>(PARTS[k][1]==='Action')===(mode==='action')).forEach(k=>{const b=document.createElement('button');b.dataset.k=k;b.textContent=PARTS[k][0];b.onclick=()=>{sel=k;renderInfo()};chipsEl.append(b)})}
+function renderChips(){chipsEl.textContent='';Object.keys(PARTS).filter(k=>PARTS[k][1]==='Pedals'||(PARTS[k][1]==='Action')===(mode==='action')).forEach(k=>{const b=document.createElement('button');b.dataset.k=k;b.textContent=PARTS[k][0];b.onclick=()=>{sel=k;renderInfo()};chipsEl.append(b)})}
 renderChips();renderInfo();
 
 if(!window.THREE||!THREE.OrbitControls){const e=document.createElement('div');e.className='err';e.textContent='The 3D view could not load. Check your connection and reload.';fig.append(e)}
@@ -177,7 +220,16 @@ const brass=M('#b8923c',{metalness:.9,roughness:.3,envMapIntensity:1}),steel=M('
 const box=(w,h,d)=>new THREE.BoxGeometry(w,h,d),cyl=(a,b,h,s=16)=>new THREE.CylinderGeometry(a,b,h,s);
 const add=(geo,mat,parent,x=0,y=0,z=0,sh=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=sh;m.receiveShadow=true;parent.add(m);return m};
 function rod(a,b,r,mat,parent){const m=add(cyl(r,r,1,10),mat,parent);m.position.copy(a).add(b).multiplyScalar(.5);m.scale.y=a.distanceTo(b);m.quaternion.setFromUnitVectors(UP,b.clone().sub(a).normalize());return m}
-const labels=[];function label(obj,pos,key,text){const el=document.createElement('div');el.className='lb';el.textContent=text||PARTS[key][0];el.onclick=()=>{sel=key;renderInfo()};labelsEl.append(el);labels.push({el,obj,pos,key,act:PARTS[key][1]==='Action'})}
+const labels=[];function label(obj,pos,key,text){const el=document.createElement('div');el.className='lb';el.textContent=text||PARTS[key][0];el.onclick=()=>{sel=key;renderInfo()};labelsEl.append(el);labels.push({el,obj,pos,key,act:PARTS[key][1]!=='Whole piano'})}
+
+// Regulation distances are Steinway's published figures for the Model D; lever lengths are technicians' measurements of Steinway actions.
+const DIP=.01016,BLOW=.0476,LETOFF=.0016,CHECK=.015,AFTER=.0012;      // key dip .400", blow 1-7/8", let-off 1/16", checking 15 mm, aftertouch about .047"
+const KNUCKLE=.017,SHANK=.130,BORE=.048,WIP_HEEL=.0625,WIP_JACK=.0927; // knuckle 17 mm, strike arm 130 mm, bore 48 mm, wippen arms 62.5 and 93 mm
+const KFRONT=.245,KCAP=.125,KEND=.29,KA=DIP/KFRONT;                    // key ratio 0.5: capstan 125 mm behind the balance pin
+const Hx=.0845,Hy=.145,Wx=.1875,Wy=.100,YSA=Hy+BORE,T=.0125;           // hammer and wippen centres: action spread 112.4 mm
+const angFor=d=>{let a=-.6,b=.2;for(let i=0;i<40;i++){const m=(a+b)/2;(SHANK*Math.sin(m)+BORE*Math.cos(m)-BORE< -d)?a=m:b=m}return a}; // shank angle that leaves the hammer tip d below the string
+const TH0=angFor(BLOW),THL=angFor(LETOFF),THC=angFor(CHECK),THS=0,PL=1-AFTER/DIP,TWL=(THL-TH0)*KNUCKLE/WIP_JACK;
+const ped={D:0,S:0,U:0},pedT={D:0,S:0,U:0};
 
 // ======================= WHOLE PIANO =======================
 const whole=new THREE.Group();scene.add(whole);
@@ -189,6 +241,7 @@ const IN=(x,y)=>[.1+(x-.1)*.955,y*.92],IN2=(x,y)=>[.1+(x-.1)*.89,y*.83],FLAT=m=>
 // curved-side limit: largest z inside the inner rim at a given x
 const edge=outline(new THREE.Shape(),-1.19,IN).getPoints(60);
 const zMax=x=>{let m=-9;edge.forEach(p=>{if(Math.abs(p.x-x)<.05&&-p.y>m)m=-p.y});return m<-8?.6:m};
+const wPed=[];
 { // case
   const s=outline(new THREE.Shape(),-1.19);s.holes.push(outline(new THREE.Path(),-1.19,IN));
   FLAT(add(new THREE.ExtrudeGeometry(s,{depth:.36,bevelEnabled:false,curveSegments:24}),lacquer,gCase,0,.62,0));
@@ -197,7 +250,7 @@ const zMax=x=>{let m=-9;edge.forEach(p=>{if(Math.abs(p.x-x)<.05&&-p.y>m)m=-p.y})
   [-.75,.75].forEach(z=>add(box(.2,.26,.06),lacquer,gCase,-1.28,.75,z));add(box(.24,.06,1.44),lacquer,gCase,-1.26,.65,0);add(box(.015,.03,1.44),lacquer,gCase,-1.372,.705,0);
   [-.665,.665].forEach(z=>add(box(.17,.06,.1),lacquer,gCase,-1.275,.73,z));
   [[-1.22,-.64],[-1.22,.64],[1.02,-.48]].forEach(([x,z])=>{add(box(.14,.1,.14),lacquer,gCase,x,.57,z);add(cyl(.062,.045,.42,4),lacquer,gCase,x,.31,z).rotation.y=Math.PI/4;add(cyl(.02,.02,.06,10),brass,gCase,x,.085,z);add(cyl(.032,.032,.05,14),brass,gCase,x,.034,z).rotation.x=Math.PI/2});
-  [-.09,.09].forEach(z=>rod(V(-1.08,.62,z),V(-1.08,.16,z*.8),.014,lacquer,gCase));add(box(.12,.07,.26),lacquer,gCase,-1.1,.13,0);[-.07,0,.07].forEach(z=>add(box(.11,.012,.035),brass,gCase,-1.2,.1,z));
+  [-.09,.09].forEach(z=>rod(V(-1.08,.62,z),V(-1.08,.16,z*.8),.014,lacquer,gCase));add(box(.12,.07,.26),lacquer,gCase,-1.1,.13,0);wPed.push(...[-.07,0,.07].map(z=>add(box(.11,.012,.035),brass,gCase,-1.2,.1,z)));
   label(gCase,V(1.3,.8,-.86),'rim');
 }
 { // lid, fallboard, music desk
@@ -241,93 +294,128 @@ function setString(o,j,off){const a=o.pins[j],dz=(j-(o.count-1)/2)*.0042,dir=o.e
   label(gStr,V(-.2,.93,.2),'treble');label(gStr,V(.2,.96,-.3),'bass')}
 // dampers (notes 1 to 68), hammers and keys: instanced, with per-note matrices so each can move
 const DN=68,damp=new THREE.InstancedMesh(box(.045,.022,.011),dark,DN),dampF=new THREE.InstancedMesh(box(.045,.008,.011),feltW,DN);gDamp.add(damp,dampF);
-const head=new THREE.InstancedMesh(box(.014,.022,.0105),feltW,88),mould=new THREE.InstancedMesh(box(.011,.055,.0095),maple,88),shank=new THREE.InstancedMesh(box(.13,.006,.006),maple,88);gAct.add(head,mould,shank);
+const head=new THREE.InstancedMesh(box(.014,.022,.0105),feltW,88),mould=new THREE.InstancedMesh(box(.011,.075,.0095),maple,88),shank=new THREE.InstancedMesh(box(.13,.006,.006),maple,88);gAct.add(head,mould,shank);
 const wk=new THREE.InstancedMesh(box(.15,.022,1.22/52*.92),ivory,52),bk=new THREE.InstancedMesh(box(.095,.012,.0125),M('#0c0c0d',{roughness:.3}),36);gAct.add(wk,bk);
 add(box(.36,.02,1.3),beech,gAct,-1.0,.7,0);add(box(.03,.03,1.26),beech,gAct,-.93,.83,0);
 {let w=0,b=0;const W52=1.22/52;notes.forEach(o=>{const pc=(o.n+8)%12,black=[1,3,6,8,10].includes(pc);o.black=black;
   if(black){o.kz=-.61+w*W52;o.ki=b++}else{o.kz=-.61+(w+.5)*W52;o.ki=w++}})}
-const HP=YS-.0855,mt=new THREE.Matrix4(),mr=new THREE.Matrix4(),mo=new THREE.Matrix4();
+const HP=YS-BORE,mt=new THREE.Matrix4(),mr=new THREE.Matrix4(),mo=new THREE.Matrix4();
 function pose(o,p,th,lift){ // p: key travel 0..1, th: hammer angle, lift: damper lift in metres
-  mt.makeTranslation(-1.10,.724,o.kz);mr.makeRotationZ(.041*p);mo.makeTranslation(o.black?-.1425:-.17,o.black?.018:0,0);(o.black?bk:wk).setMatrixAt(o.ki,mt.clone().multiply(mr).multiply(mo));
+  mt.makeTranslation(-1.10,.724,o.kz);mr.makeRotationZ(KA*p);mo.makeTranslation(o.black?-.1425:-.17,o.black?.018:0,0);(o.black?bk:wk).setMatrixAt(o.ki,mt.clone().multiply(mr).multiply(mo));
   mt.makeTranslation(XS-.13,HP,o.z);mr.makeRotationZ(th);const base=mt.clone().multiply(mr);
-  shank.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.065,0,0)));mould.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.13,-.002,0)));head.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.13,.034,0)));
+  shank.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.065,0,0)));mould.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.13,.004,0)));head.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.13,.037,0)));
   if(o.n<=DN){const y=YS+(o.bass?.012:0)+.006+lift;damp.setMatrixAt(o.n-1,mo.makeTranslation(XS+.075,y+.014,o.z));dampF.setMatrixAt(o.n-1,mo.makeTranslation(XS+.075,y,o.z))}}
-notes.forEach(o=>pose(o,0,-.04,0));
+const wLift=(o,p)=>Math.max(p*.006,ped.D*.007,o.sos?.006:0),restAll=()=>{notes.forEach(o=>{if(!live.has(o.n))pose(o,0,TH0,wLift(o,0))});[head,mould,shank,damp,dampF,wk,bk].forEach(m=>m.instanceMatrix.needsUpdate=true)};
 label(gAct,V(-1.3,.76,.45),'keys');label(gAct,V(XS,.86,-.2),'hammers');label(gDamp,V(XS+.08,.95,.05),'dampers');
 // playing a note
-const live=new Map();let ac=null,master=null,sndOn=true;
+const live=new Map();restAll();let ac=null,master=null,sndOn=true;
 function audio(){try{if(!ac){const A=window.AudioContext||window.webkitAudioContext;ac=new A();master=ac.createGain();master.gain.value=.5;master.connect(ac.destination)}ac.resume()}catch(e){ac=null}}
-function tone(n,vel){if(!ac||!sndOn||ac.state!=='running')return;const t=ac.currentTime,f=27.5*2**((n-1)/12),g=ac.createGain(),dur=Math.max(.5,3.2-n*.028);
+function tone(n,vel){if(ped.U>.5)vel*=.6;if(!ac||!sndOn||ac.state!=='running')return;const t=ac.currentTime,f=27.5*2**((n-1)/12),g=ac.createGain(),dur=Math.max(.5,3.2-n*.028);
   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vel*.24,t+.006);g.gain.exponentialRampToValueAtTime(.0008,t+dur);g.connect(master);
   [['triangle',f,1],['sine',f*2,.35],['sine',f*3,.12]].forEach(([ty,fr,a])=>{if(fr>9000)return;const o=ac.createOscillator(),og=ac.createGain();o.type=ty;o.frequency.value=fr;og.gain.value=a;o.connect(og);og.connect(g);o.start(t);o.stop(t+dur+.05)})}
 function playNote(n,vel=.8,hold=.35){const o=notes[n-1];if(!o)return;live.set(n,{o,t:0,hold,struck:false,vel})}
 function stepNotes(dt){if(!live.size)return;const tt=performance.now()/1000;
   live.forEach((s,n)=>{s.t+=dt;const t=s.t,o=s.o,rel=t-(.07+s.hold);
     const p=t<.07?t/.07:rel<0?1:Math.max(0,1-rel/.12);
-    const th=t<.06?-.04+.37*(t/.06):t<.12?.33-.11*((t-.06)/.06):rel<0?.22:-.04+.26*p;
+    const th=t<.06?TH0*(1-t/.06):t<.12?THC*((t-.06)/.06):rel<0?THC:TH0+(THC-TH0)*p,free=n>DN||ped.D>.5||o.sos;if(rel<0)o.held=true;else o.held=false;
     if(!s.struck&&t>=.06){s.struck=true;tone(n,s.vel)}
-    const amp=t<.06?0:Math.exp(-(t-.06)*(n>DN?2.5:1.2))*(rel>0&&n<=DN?Math.exp(-rel*25):1)*(o.bass?.004:.0022);
-    pose(o,p,th,p*.008);for(let j=0;j<o.count;j++)setString(o,j,amp*Math.sin(tt*(55+n)+j*2));
-    if(rel>.12&&amp<.00005){pose(o,0,-.04,0);for(let j=0;j<o.count;j++)setString(o,j,0);live.delete(n)}});
+    if(rel>0&&!free)s.damp=(s.damp||0)+dt;const amp=t<.06?0:Math.exp(-(t-.06)*(n>DN?2.5:1.2))*Math.exp(-(s.damp||0)*25)*(o.bass?.004:.0022);
+    pose(o,p,th,wLift(o,p));for(let j=0;j<o.count;j++)setString(o,j,amp*Math.sin(tt*(55+n)+j*2));
+    if(rel>.12&&amp<.00005){pose(o,0,TH0,wLift(o,0));for(let j=0;j<o.count;j++)setString(o,j,0);live.delete(n)}});
   [wk,bk,head,mould,shank,damp,dampF,strSteel,strCu].forEach(m=>m.instanceMatrix.needsUpdate=true)}
 // the piece: opening bars of Bach's Prelude in C major, BWV 846
 const BARS=[[40,44,47,52,56],[40,42,49,54,57],[39,42,47,54,57],[40,44,47,52,56]],PAT=[0,1,2,3,4,2,3,4];let piece=false,pn=0,pt=0;
 function stepPiece(dt){if(!piece)return;pt-=dt;while(pt<=0){const k=PAT[pn%8];playNote(BARS[Math.floor(pn/16)%4][k],k===0?1:.7,k<2?.9:.3);pn++;pt+=.26}}
 
 // ======================= ACTION OF ONE KEY =======================
+// Regulation distances are Steinway's published figures for the Model D; lever lengths are technicians' measurements of Steinway actions.
 const action=new THREE.Group();action.visible=false;scene.add(action);
-const T=.0125,Hx=.0867,Hy=.160,YSA=.2455,TW=.0786,PL=.88,TH0=-.04,THS=.33,THC=.22;
-add(box(.66,.02,.09),beech,action,.1,-.012,0);add(box(.04,.02,.06),beech,action,0,.009,0);rod(V(0,.018,0),V(0,.05,0),.002,steel,action);
-add(box(.03,.012,.06),beech,action,-.21,.004,0);add(cyl(.009,.009,.004,14),feltG,action,-.21,.012,0);add(box(.03,.005,.06),feltG,action,.28,.0105,0);
-const aKey=new THREE.Group();aKey.position.set(0,.030,0);action.add(aKey);
-add(box(.54,.022,T),maple,aKey,.03,0,0);add(box(.15,.003,T),ivory,aKey,-.165,.0125,0);add(box(.003,.022,T),ivory,aKey,-.2405,0,0);
-add(cyl(.004,.004,.014,10),brass,aKey,.13,.018,0);rod(V(.235,.011,0),V(.238,.1,0),.0018,steel,aKey);add(box(.012,.032,T),feltG,aKey,.236,.112,0).rotation.z=.12;
-const aWip=new THREE.Group();aWip.position.set(.20,.090,0);action.add(aWip);
-add(box(.11,.014,T),beech,aWip,-.0475,0,0);add(box(.02,.03,T),beech,aWip,-.07,-.021,0);add(box(.02,.004,T),feltR,aWip,-.07,-.0375,0);
-add(box(.006,.04,T*.8),beech,aWip,-.045,.027,0);
-const aRep=add(box(.10,.006,T),beech,aWip,-.065,.046,0);
-add(box(.02,.03,.06),beech,action,.212,.07,0);
-const aJack=new THREE.Group();aJack.position.set(-.095,0,0);aWip.add(aJack);
-add(box(.007,.052,T*.7),beech,aJack,0,.026,0);add(box(.035,.007,T*.7),beech,aJack,-.0175,.004,0);
-rod(V(.075,.11,0),V(.075,.168,0),.0016,steel,action);const aLet=add(cyl(.006,.006,.006,14),feltR,action,.075,.107,0);
-const aHam=new THREE.Group();aHam.position.set(Hx,Hy,0);action.add(aHam);
-add(box(.13,.006,.006),maple,aHam,.065,0,0);const aKn=add(cyl(.006,.006,T*.9,14),M('#c9b18a'),aHam,.0183,-.012,0);aKn.rotation.x=Math.PI/2;
-add(box(.012,.06,T*.85),maple,aHam,.13,-.003,0);const aHead=add(cyl(.0112,.0112,T*.95,24),M('#fbf8f0',{roughness:1}),aHam,.13,.031,0);aHead.rotation.x=Math.PI/2;aHead.scale.z=1.25;add(box(.02,.012,T*.95),M('#fbf8f0',{roughness:1}),aHam,.13,.022,0);
-add(box(.02,.012,T),beech,action,Hx-.008,Hy+.003,0);add(box(.03,.026,.06),beech,action,.062,.183,0);add(cyl(.0025,.0025,.012,8),brass,action,.1,.172,0);
-const aDam=new THREE.Group();aDam.position.set(.44,.047,0);action.add(aDam);
-add(box(.15,.008,T*.8),beech,aDam,-.075,0,0);rod(V(-.13,.004,0),V(-.13,YSA-.047+.022,0),.0016,steel,aDam);
-const aDh=add(box(.03,.012,T),dark,aDam,-.13,YSA-.047+.019,0);add(box(.03,.008,T),feltW,aDam,-.13,YSA-.047+.009,0);add(box(.025,.03,.06),beech,action,.455,.03,0);
-add(box(.18,.035,.07),iron,action,.035,.2225,0);const aAg=add(cyl(.004,.004,.02,10),brass,action,.12,YSA-.004,0);add(cyl(.003,.003,.05,8),steel,action,-.01,.255,0);
-rod(V(-.01,.262,0),V(.12,YSA,0),.0008,steel,action);
-const BX=.62;add(box(.022,.03,.07),M('#9a6b3c'),action,BX,YSA-.016,0);add(box(.34,.008,.09),spruce,action,.56,YSA-.035,0);rod(V(BX,YSA,0),V(.74,YSA-.005,0),.0008,steel,action);
-const SN=48,sGeo=new THREE.BufferGeometry();sGeo.setAttribute('position',new THREE.Float32BufferAttribute(new Float32Array((SN+1)*3),3));
-const aStr=new THREE.Line(sGeo,new THREE.LineBasicMaterial({color:0xf2f2f2}));action.add(aStr);
-const lens=new THREE.Shape();lens.moveTo(.12,0);for(let i=0;i<=SN;i++)lens.lineTo(.12+(BX-.12)*i/SN,Math.sin(Math.PI*i/SN));for(let i=SN;i>=0;i--)lens.lineTo(.12+(BX-.12)*i/SN,-Math.sin(Math.PI*i/SN));
+const aShift=new THREE.Group();action.add(aShift); // everything on the keyframe: this is what the una corda pedal slides sideways
+add(box(.70,.045,.34),M('#a98558',{roughness:.7}),action,.07,-.0225,0);
+add(box(.05,.0425,.07),beech,aShift,0,.02125,0);rod(V(0,.04,0),V(0,.075,0),.002,steel,aShift);
+add(box(.03,.022,.07),beech,aShift,-.235,.011,0);add(cyl(.009,.009,.010,14),feltG,aShift,-.235,.027,0);add(box(.03,.0345,.07),beech,aShift,.28,.01725,0);add(box(.03,.008,.07),feltG,aShift,.28,.0385,0);
+const aKey=new THREE.Group();aKey.position.set(0,.0425,0);aShift.add(aKey);
+add(box(.55,.025,T),maple,aKey,.02,.0125,0);add(box(.15,.003,T*1.85),ivory,aKey,-.18,.0265,0);add(box(.003,.022,T*1.85),ivory,aKey,-.2565,.016,0);
+const aCap=add(cyl(.005,.005,.013,12),brass,aKey,KCAP,.0315,0);
+rod(V(.236,.025,0),V(.226,.045,0),.0018,steel,aKey);const aBack=add(box(.012,.034,T),feltG,aKey,.2215,.056,0);aBack.rotation.z=.2;
+const aWip=new THREE.Group();aWip.position.set(Wx,Wy,0);aShift.add(aWip);
+add(box(.115,.013,T),beech,aWip,-.0475,0,0);add(box(.022,.015,T),beech,aWip,-WIP_HEEL,-.012,0);add(box(.022,.003,T),feltR,aWip,-WIP_HEEL,-.0205,0);add(box(.024,.03,T),beech,aWip,-.09,-.014,0);
+add(box(.006,.02,T*.8),beech,aWip,-.04,.012,0);const aRep=add(box(.075,.006,T),beech,aWip,-.075,.0218,0);
+add(box(.014,.016,.07),beech,aShift,Wx,.088,0);
+const aJack=new THREE.Group();aJack.position.set(-.09,-.022,0);aWip.add(aJack);
+add(box(.007,.0468,T*.7),beech,aJack,0,.0234,0);add(box(.032,.007,T*.7),beech,aJack,-.016,.003,0);
+rod(V(.0665,.097,0),V(.0665,.153,0),.0016,steel,aShift);const aLet=add(cyl(.006,.006,.006,14),feltR,aShift,.0665,.0943,0);
+const aHam=new THREE.Group();aHam.position.set(Hx,Hy,0);aShift.add(aHam);
+add(box(SHANK,.006,.006),maple,aHam,SHANK/2,0,0);const aKn=add(cyl(.005,.005,T*.9,14),M('#c9b18a'),aHam,KNUCKLE,-.010,0);aKn.rotation.x=Math.PI/2;
+add(box(.011,.075,T*.85),maple,aHam,SHANK,.004,0);const hf=M('#fbf8f0',{roughness:1});
+const aHead=add(cyl(.0096,.0096,T*.95,24),hf,aHam,SHANK,.036,0);aHead.rotation.x=Math.PI/2;aHead.scale.z=1.25;add(box(.019,.014,T*.95),hf,aHam,SHANK,.026,0);
+add(box(.022,.012,T),beech,aShift,Hx-.01,Hy+.002,0);add(box(.02,.016,.07),beech,aShift,.064,.160,0);add(cyl(.0025,.0025,.012,8),brass,aShift,.09,.153,0);
+// fixed parts: plate and pinblock, three strings of one note, bridge, soundboard, belly rail
+add(box(.11,.038,.09),beech,action,-.015,.149,0);add(box(.22,.012,.09),iron,action,.04,.174,0);const AGX=.15,BX=AGX+.516;
+const aAg=add(cyl(.004,.004,.014,10),brass,action,AGX,YSA-.006,0);add(cyl(.0035,.0035,.055,8),steel,action,-.01,.185,0);
+add(box(.022,.03,.09),M('#9a6b3c'),action,BX,YSA-.016,0);add(box(.5,.009,.12),spruce,action,.59,YSA-.036,0);add(box(.035,.07,.12),beech,action,.36,.118,0);
+const SN=48,ZS=[-.0036,0,.0036],aStr=ZS.map(z=>{rod(V(-.01,.2,z*.5),V(AGX,YSA,z),.0006,steel,action);rod(V(BX,YSA,z),V(BX+.1,YSA-.004,z),.0006,steel,action);
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(new Float32Array((SN+1)*3),3));const l=new THREE.Line(g,new THREE.LineBasicMaterial({color:0xf2f2f2}));l.frustumCulled=false;action.add(l);return l});
+const lens=new THREE.Shape();lens.moveTo(AGX,0);for(let i=1;i<=SN;i++)lens.lineTo(AGX+(BX-AGX)*i/SN,Math.sin(Math.PI*i/SN));for(let i=SN-1;i>0;i--)lens.lineTo(AGX+(BX-AGX)*i/SN,-Math.sin(Math.PI*i/SN));
 const aEnv=new THREE.Mesh(new THREE.ShapeGeometry(lens),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.25,depthWrite:false,side:THREE.DoubleSide}));aEnv.position.y=YSA;action.add(aEnv);
-[[aKey,V(-.12,-.012,0),'key'],[aKey,V(.13,.03,0),'capstan'],[aWip,V(-.005,-.012,0),'wippen'],[aJack,V(-.03,.0,0),'jack'],[aLet,V(0,.01,0),'letoff'],[aRep,V(.04,.012,0),'replever'],[aKn,V(0,0,0),'knuckle'],
- [aHam,V(.075,.012,0),'shank'],[aHead,V(.012,.0,.0),'hammer'],[aKey,V(.25,.125,0),'backcheck'],[aDh,V(0,.016,0),'damper'],[action,V(.47,YSA+.012,0),'string'],[aAg,V(0,.018,0),'agraffe']].forEach(([o,p,k])=>label(o,p,k));
+// damper: underlever pivot 57 mm (2-1/4") above the keybed, wire, head; damper tray under the levers; sostenuto rod
+const DA0=.137,aDam=new THREE.Group();aDam.position.set(.43,.057,0);action.add(aDam);
+add(box(.15,.008,T*.8),beech,aDam,-.075,0,0);const aTab=add(box(.012,.004,T),feltR,aDam,-.105,.034,0);add(box(.006,.03,T*.8),beech,aDam,-.105,.017,0);
+const aWire=new THREE.Group();aWire.position.set(-.13,.004,0);aDam.add(aWire);rod(V(0,0,0),V(0,YSA-.0787+.012,0),.0016,steel,aWire);
+const aDh=add(box(.034,.012,T*1.9),dark,aWire,0,YSA-.0787+.015,0);add(box(.034,.008,T*1.9),feltW,aWire,0,YSA-.0787+.005,0);
+add(box(.02,.03,.07),beech,action,.445,.04,0);
+const aTray=add(box(.014,.012,.3),dark,action,.33,.0605,0),aSos=new THREE.Group();aSos.position.set(.3,.118,0);action.add(aSos);
+const sosRod=add(cyl(.004,.004,.3,12),brass,aSos);sosRod.rotation.x=Math.PI/2;add(box(.012,.002,.3),brass,aSos,.008,0,0);
+// pedals, lyre and trapwork (key top is 735 mm above the floor, so the pedals sit about 0.6 m below the keybed)
+const FY=-.667,PZ=[-.105,0,.105],aPed=PZ.map(z=>{const g=new THREE.Group();g.position.set(-.16,FY+.065,z);action.add(g);add(box(.24,.014,.032),brass,g,-.02,0,0);return g});
+add(box(.12,.09,.34),lacquer,action,-.13,FY+.055,0);[-.14,.14].forEach(z=>rod(V(-.13,FY+.1,z),V(-.13,-.045,z),.016,lacquer,action));add(box(.9,.008,.5),M('#8a6a45',{roughness:.7}),action,.07,FY-.004,0,false);
+const aRodD=rod(V(-.06,FY+.065,PZ[2]),V(-.06,-.085,PZ[2]),.004,steel,action),aTrap=new THREE.Group();aTrap.position.set(.62,-.075,PZ[2]);action.add(aTrap);add(box(.7,.02,.03),beech,aTrap,-.35,0,0);
+const aPit=rod(V(.33,-.065,PZ[2]),V(.33,.052,PZ[2]),.005,maple,action);
+const aRodS=rod(V(-.06,FY+.065,0),V(-.06,-.085,0),.004,steel,action);add(box(.42,.012,.02),beech,action,.13,-.075,0);const aPull=rod(V(.3,-.07,-.03),V(.3,.11,-.03),.0025,steel,action);
+const aRodU=rod(V(-.06,FY+.065,PZ[0]),V(-.06,-.085,PZ[0]),.004,steel,action);add(box(.05,.03,.05),beech,action,-.05,-.065,PZ[0]);
+[[aKey,V(-.12,-.012,0),'key'],[aCap,V(0,-.004,0),'capstan'],[aWip,V(-.005,-.012,0),'wippen'],[aJack,V(-.03,.0,0),'jack'],[aLet,V(0,.01,0),'letoff'],[aRep,V(.04,.012,0),'replever'],[aKn,V(0,0,0),'knuckle'],
+ [aHam,V(.075,.012,0),'shank'],[aHead,V(.012,0,0),'hammer'],[aBack,V(.012,.0,0),'backcheck'],[aDh,V(0,.016,0),'damper'],[aDam,V(-.03,-.004,0),'underlever'],[aTray,V(0,-.01,.1),'tray'],[aSos,V(0,.012,.1),'sosrod'],
+ [action,V(.5,YSA+.012,0),'string'],[aAg,V(0,.016,0),'agraffe'],[aPed[2],V(-.12,.02,0),'pedalD'],[aPed[1],V(-.12,.02,0),'pedalS'],[aPed[0],V(-.12,.02,0),'pedalU']].forEach(([o,p,k])=>label(o,p,k));
 const ease=x=>x*x*(3-2*x),UL=.4*(()=>{let a=0,b=1;for(let i=0;i<30;i++){const m=(a+b)/2;ease(m)<PL?a=m:b=m}return a})(),USK=UL+.03,UCH=UL+.10,UREL=.62;
-let au=0,aPlaying=false,aStruck=false,dampDownU=2;
+let au=0,aPlaying=false,ring=[0,0,0],keyLift=0;
+let sosLatch={set:false,hold:false};
 const phaseEl=document.getElementById('phase'),scrub=document.getElementById('scrub'),strikeBtn=document.getElementById('strike');
-function setAction(u){au=u;const p=u<.4?ease(u/.4):u<UREL?1:1-ease((u-UREL)/(1-UREL));
-  aKey.rotation.z=-.021+.042*p;aWip.rotation.z=-TW*p;aJack.rotation.z=p>PL?(p-PL)/(1-PL)*.28:0;
-  const con=TH0+(.095*Math.sin(TW*Math.min(p,PL)))/.0183;let th;
+function setAction(u){const was=au;au=u;const p=u<.4?ease(u/.4):u<UREL?1:1-ease((u-UREL)/(1-UREL));
+  aKey.rotation.z=KA*p;aWip.rotation.z=-TWL*p/PL;aJack.rotation.z=p>PL?(p-PL)/(1-PL)*.3:0;
+  const con=TH0+(THL-TH0)*Math.min(p,PL)/PL;let th;
   if(u<=UL)th=con;else if(u<USK)th=con+(THS-con)*((u-UL)/(USK-UL));else if(u<UCH)th=THS-(THS-THC)*ease((u-USK)/(UCH-USK));else if(u<UREL)th=THC;else th=TH0+(THC-TH0)*p;
-  aHam.rotation.z=th;const rise=.29*.042*p,lift=Math.max(0,rise-.004)/.15;aDam.rotation.z=-lift;
-  let amp=0;if(u>=USK){amp=Math.exp(-(u-USK)*1.3);if(u>UREL&&lift<=0){if(dampDownU>u||dampDownU<UREL)dampDownU=u;amp*=Math.exp(-(u-dampDownU)*60)}}aAmp=amp;
-  phaseEl.textContent=u<.02?'At rest: the hammer lies on the repetition lever, and the damper rests on the string.':u<=UL?'The key goes down. The capstan lifts the wippen, and the jack pushes the hammer up.':u<USK?'Let-off: the jack slips out from under the knuckle. The hammer flies the last 2 mm on its own.':u<USK+.02?'Strike: the hammer touches the string for an instant.':u<UREL?'The hammer has bounced back and is caught by the backcheck. The damper is up, so the string rings.':u<.98?'The key comes up. The jack slides back under the knuckle, and the damper falls and stops the string.':'Back at rest, ready for the next note.'}
-let aAmp=0;
-function stepAction(dt,t){if(aPlaying){const u=Math.min(1,au+dt/6);if(!aStruck&&u>=USK){aStruck=true;tone(40,.8)}setAction(u);scrub.value=Math.round(u*1000);if(u>=1){aPlaying=false;strikeBtn.setAttribute('aria-pressed','false');strikeBtn.textContent='Strike a note'}}
-  const pos=sGeo.attributes.position,A=aAmp*.006;for(let i=0;i<=SN;i++){const s=i/SN;pos.setXYZ(i,.12+(BX-.12)*s,YSA+A*(Math.sin(Math.PI*s)*Math.sin(t*38)+.3*Math.sin(2*Math.PI*s)*Math.sin(t*76)),0)}pos.needsUpdate=true;
-  aEnv.scale.y=Math.max(.0001,A);aEnv.material.opacity=.28*Math.min(1,aAmp*3)}
-strikeBtn.onclick=()=>{audio();if(aPlaying){aPlaying=false}else{if(au>=1||au<=0){au=0;dampDownU=2}aStruck=au>=USK;aPlaying=true}strikeBtn.setAttribute('aria-pressed',aPlaying);strikeBtn.textContent=aPlaying?'Pause':'Strike a note'};
-scrub.oninput=()=>{aPlaying=false;strikeBtn.setAttribute('aria-pressed','false');strikeBtn.textContent='Strike a note';dampDownU=2;setAction(scrub.value/1000)};
+  aHam.rotation.z=th;keyLift=Math.max(0,KEND*KA*p-.0053)/.14;
+  if(was<USK&&u>=USK&&u<UCH){ring=[ped.U>.5?0:1,1,1];tone(40,ped.U>.5?.5:.8)}
+  phaseEl.textContent=u<.02?'At rest: the hammer lies '+(BLOW*1000).toFixed(1)+' mm below the string, and the damper rests on it.':u<=UL?'The key goes down. The capstan lifts the wippen, and the jack pushes the knuckle. At half the hammer travel the key starts to lift the damper.':u<USK?'Let-off: 1.6 mm from the string the jack slips out from under the knuckle. The hammer flies on alone.':u<USK+.02?'Strike: the hammer touches the string for an instant.':u<UREL?'The hammer has bounced back and is caught by the backcheck, 15 mm below the string. The damper is up, so the string rings.':u<.98?'The key comes up. The jack slides back under the knuckle, and the damper falls and stops the string.':'Back at rest, ready for the next note.'}
+function stepAction(dt,t){
+  if(aPlaying){const u=Math.min(1,au+dt/6);setAction(u);scrub.value=Math.round(u*1000);if(u>=1){aPlaying=false;strikeBtn.setAttribute('aria-pressed','false');strikeBtn.textContent='Strike a note'}}
+  // damper pedal: 3 mm free play at the tip, then pedal, rod, trap lever and pitman raise the tray under every damper lever
+  const tip=ped.D*.023,rodUp=tip*.77,trap=rodUp/.68,trayUp=Math.max(0,trap*.29-.0009),pedLift=trayUp/.10;
+  aPed[2].rotation.z=tip/.13;aRodD.position.y=(FY+.065-.085)/2+rodUp;aTrap.rotation.z=-trap;aPit.position.y=-.0065+trap*.29;aTray.position.y=.0605+trayUp;
+  let lift=Math.max(keyLift,pedLift);
+  if(pedT.S&&!sosLatch.set){sosLatch={set:true,hold:lift>.02}}if(!pedT.S)sosLatch={set:false,hold:false};
+  if(sosLatch.hold)lift=Math.max(lift,.035);
+  aDam.rotation.z=-(DA0+lift);aWire.rotation.z=DA0+lift;aSos.rotation.z=-ped.S*.9;aPed[1].rotation.z=ped.S*.15;aRodS.position.y=(FY+.065-.085)/2+ped.S*.015;aPull.position.y=.02+ped.S*.004;
+  aPed[0].rotation.z=ped.U*.15;aRodU.position.y=(FY+.065-.085)/2+ped.U*.015;aShift.position.z=ped.U*.0036;
+  const down=lift<.004;ring=ring.map(a=>a*Math.exp(-dt*(down?14:.3)));let mx=0;
+  aStr.forEach((l,j)=>{const pos=l.geometry.attributes.position,A=ring[j]*.005;mx=Math.max(mx,ring[j]);for(let i=0;i<=SN;i++){const s=i/SN;pos.setXYZ(i,AGX+(BX-AGX)*s,YSA+A*(Math.sin(Math.PI*s)*Math.sin(t*38+j)+.3*Math.sin(2*Math.PI*s)*Math.sin(t*76+j)),ZS[j])}pos.needsUpdate=true});
+  aEnv.scale.y=Math.max(.0001,mx*.005);aEnv.material.opacity=.28*Math.min(1,mx*3)}
+strikeBtn.onclick=()=>{audio();if(aPlaying){aPlaying=false}else{if(au>=1||au<=0)au=0;aPlaying=true}strikeBtn.setAttribute('aria-pressed',aPlaying);strikeBtn.textContent=aPlaying?'Pause':'Strike a note'};
+scrub.oninput=()=>{aPlaying=false;strikeBtn.setAttribute('aria-pressed','false');strikeBtn.textContent='Strike a note';setAction(scrub.value/1000)};
 setAction(0);
 
 // ======================= UI =======================
-const CAM={whole:[V(-2.0,2.1,2.3),V(0,.85,0)],action:[V(.2,.17,.5),V(.2,.135,0)]};
+const CAM={whole:[V(-2.0,2.1,2.3),V(0,.85,0)],action:[V(.2,.17,1.12),V(.2,.125,0)]},AV={close:[V(.2,.17,1.12),V(.2,.125,0)],pedals:[V(.42,-.16,3.0),V(.15,-.25,0)],hammer:[V(.52,.5,.3),V(.2145,.185,0)]};
+function aView(k){camera.position.copy(AV[k][0]);controls.target.copy(AV[k][1]);document.querySelectorAll('#aviews button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===k))}
+document.querySelectorAll('#aviews button').forEach(b=>b.onclick=()=>aView(b.dataset.v));
+let lastD=-1;
+function stepPeds(dt){['D','S','U'].forEach(k=>{ped[k]+=(pedT[k]-ped[k])*Math.min(1,dt*9)});if(mode!=='whole')return;
+  wPed[0].rotation.z=ped.U*.12;wPed[1].rotation.z=ped.S*.12;wPed[2].rotation.z=ped.D*.12;gAct.position.z=ped.U*.0036;if(Math.abs(ped.D-lastD)>1e-4){lastD=ped.D;restAll()}}
+document.querySelectorAll('#pedals button').forEach(b=>b.onclick=()=>{const k=b.dataset.p;pedT[k]=pedT[k]?0:1;b.setAttribute('aria-pressed',!!pedT[k]);sel='pedal'+k;renderChips();renderInfo();
+  if(k==='S'){notes.forEach(o=>{o.sos=!!pedT.S&&(o.held||pedT.D>0)});if(mode==='whole')restAll()}
+  if(mode==='action'&&pedT[k])aView(k==='U'?'hammer':'pedals')});
 function setMode(m){CAM[mode]=[camera.position.clone(),controls.target.clone()];mode=m;whole.visible=m==='whole';action.visible=m==='action';
-  camera.position.copy(CAM[m][0]);controls.target.copy(CAM[m][1]);controls.minDistance=m==='whole'?.5:.08;controls.maxDistance=m==='whole'?9:1.6;controls.maxPolarAngle=m==='whole'?Math.PI:Math.PI*.6;
+  camera.position.copy(CAM[m][0]);controls.target.copy(CAM[m][1]);controls.minDistance=m==='whole'?.5:.15;controls.maxDistance=m==='whole'?9:6;camera.fov=m==='whole'?40:16;camera.updateProjectionMatrix();
   document.getElementById('wholeUI').hidden=m!=='whole';document.getElementById('actionUI').hidden=m!=='action';document.getElementById('hint').textContent=m==='whole'?'Tap a key to play it':'Side view of one key, about life size';
   document.querySelectorAll('#modes button[data-m]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));sel=m==='whole'?'soundboard':'jack';renderChips();renderInfo();
   if(m!=='whole'){piece=false;playBtn.setAttribute('aria-pressed','false');playBtn.textContent='Play a piece'}if(m!=='action')aPlaying=false}
@@ -349,12 +437,12 @@ camera.position.copy(CAM.whole[0]);controls.target.copy(CAM.whole[1]);controls.m
 const ro=new ResizeObserver(()=>{const w=fig.clientWidth,h=fig.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()});ro.observe(fig);
 const tmp=new THREE.Vector3();let lastT=0;
 function loop(t){requestAnimationFrame(loop);const dt=Math.min(.05,Math.max(0,(t-lastT)/1000));lastT=t;
-  if(mode==='whole'){stepPiece(dt);stepNotes(dt)}else stepAction(dt,t/1000);
+  stepPeds(dt);if(mode==='whole'){stepPiece(dt);stepNotes(dt)}else stepAction(dt,t/1000);
   controls.update();renderer.render(scene,camera);const w=fig.clientWidth,h=fig.clientHeight;
   labels.forEach(l=>{let vis=l.act===(mode==='action');if(vis){let o=l.obj;while(o){if(!o.visible){vis=false;break}o=o.parent}}
     if(vis){l.obj.localToWorld(tmp.copy(l.pos)).project(camera);vis=tmp.z<1&&Math.abs(tmp.x)<1.02&&Math.abs(tmp.y)<1.02}
     l.el.style.visibility=vis?'visible':'hidden';l.el.classList.toggle('on',l.key===sel);if(vis)l.el.style.transform=`translate(${(tmp.x*.5+.5)*w}px,${(-tmp.y*.5+.5)*h}px) translate(-50%,-100%)`})}
-requestAnimationFrame(loop);
+/*TESTHOOK*/requestAnimationFrame(loop);
 }
 }
 </script>
