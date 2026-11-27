@@ -1,5 +1,7 @@
 # Piano Recording
 
+**[Open the web app](https://shanem73.github.io/piano-recording/)**
+
 An interactive 3D layout of a solo piano recording setup, built for students to follow.
 The scene shows the C. Minor Recital Hall (Ellis 220, Missouri State University) with a
 Steinway concert grand, two Zoom H6 recorders and a pair of AKG C214 microphones.
