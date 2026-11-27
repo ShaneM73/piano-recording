@@ -1,6 +1,6 @@
 # Piano Recording
 
-**[Open the web app](https://shanem73.github.io/piano-recording/)**
+**[Open the web app](https://shanem73.github.io/piano-recording/)** · **[Read the full setup and post-processing guide](GUIDE.md)**
 
 An interactive 3D layout of a solo piano recording setup, built for students to follow.
 The scene shows the C. Minor Recital Hall (Ellis 220, Missouri State University) with a
@@ -48,6 +48,7 @@ Three stereo pairs, six audio tracks, every microphone 1.5 m above its floor.
 In editing (DaVinci Resolve), every H6 track is synchronised by waveform to the
 camera's sound track, the left/right channels are arranged, levels are balanced, and
 the result is exported as a video with a stereo mix.
+The step-by-step instructions for both parts are in [GUIDE.md](GUIDE.md).
 
 ## Accuracy
 
