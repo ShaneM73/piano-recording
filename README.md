@@ -1,6 +1,6 @@
 # Piano Recording
 
-**[Open the web app](https://shanem73.github.io/piano-recording/)** · **[Read the full setup and post-processing guide](GUIDE.md)** · **[Look inside the piano](https://shanem73.github.io/piano-recording/piano.html)**
+**[Open the web app](https://shanem73.github.io/piano-recording/)** · **[Read the instructions](https://shanem73.github.io/piano-recording/guide.html)** · **[Look inside the piano](https://shanem73.github.io/piano-recording/piano.html)**
 
 An interactive 3D layout of a solo piano recording setup, built for students to follow.
 The scene shows the C. Minor Recital Hall (Ellis 220, Missouri State University) with a
@@ -22,6 +22,7 @@ What the page does:
 
 - Available in English, Simplified Chinese, Traditional Chinese and Korean, with a language switch at the top of both pages.
 - Tap the piano to open the second page, with the 3D model of the piano and its action.
+- An Instructions page (`guide.html`) carries the full setup and DaVinci Resolve guide in all four languages, with a contents list linking each step. A menu at the top of every page moves between the three pages.
 - Orbit, zoom and tap any microphone for its role, height, distance and aim.
 - One-tap views: overview, top (like the original sketch), from the seats, behind each
   microphone, and the pianist's view.
@@ -64,7 +65,7 @@ Three stereo pairs, six audio tracks, every microphone 1.5 m above its floor.
 In editing (DaVinci Resolve), every H6 track is synchronised by waveform to the
 camera's sound track, the left/right channels are arranged, levels are balanced, and
 the result is exported as a video with a stereo mix.
-The step-by-step instructions for both parts are in [GUIDE.md](GUIDE.md).
+The step-by-step instructions for both parts are on the [Instructions page](https://shanem73.github.io/piano-recording/guide.html), and as Markdown in [English](GUIDE.md), [Simplified Chinese](GUIDE.zh-Hans.md) and [Korean](GUIDE.ko.md).
 
 ## Accuracy
 
