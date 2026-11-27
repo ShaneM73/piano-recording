@@ -1,6 +1,6 @@
 # Piano Recording
 
-**[Open the web app](https://shanem73.github.io/piano-recording/)** · **[Read the full setup and post-processing guide](GUIDE.md)**
+**[Open the web app](https://shanem73.github.io/piano-recording/)** · **[Read the full setup and post-processing guide](GUIDE.md)** · **[Look inside the piano](https://shanem73.github.io/piano-recording/piano.html)**
 
 An interactive 3D layout of a solo piano recording setup, built for students to follow.
 The scene shows the C. Minor Recital Hall (Ellis 220, Missouri State University) with a
@@ -26,6 +26,18 @@ What the page does:
 - Toggles for the piano lid, pickup fields, measurements, labels, cables and hall walls.
 - "Play sound waves": a slow-motion simulation of sound leaving the soundboard,
   reflecting off the walls and reaching each microphone, with a level meter per channel.
+
+## Inside the piano
+
+`piano.html` is a second page: a concert grand you can open up, and one key's action in slow motion.
+
+- **Whole piano:** case and braces, soundboard with ribs and bridges, cast-iron plate, 236 strings with the bass strings crossing over the tenor, tuning pins, dampers, 88 hammers and keys. Hide any layer, make the case see-through, or pull the layers apart with the Explode slider. Tap a key to play it and watch its key, hammer, damper and strings move.
+- **Action of one key:** key, capstan, wippen, jack, let-off button, repetition lever, knuckle, hammer, backcheck, damper and string, animated through one key stroke. Play it or step through it with the slider.
+
+![The piano's interior from above](piano-inside.png)
+![The action of one key just after the strike](piano-action.png)
+
+The parts are modelled by hand to the real overall size and the standard grand action. Shapes and positions are simplified for teaching and are not a maker's drawings.
 
 ## The setup
 

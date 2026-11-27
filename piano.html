@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inside a Concert Grand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&display=swap" rel="stylesheet">
+<style>
+/* VOICE: calm, precise workshop manual for students
+   IDEA: a stage plot you can walk around — the engineer's sketch made solid
+   PICTURE: the 3D stage itself, Steinway, stands, cables, pickup cones
+   COLOUR and TYPE: paper-white ground, black lacquer piano, three signal colours (one per stereo pair); Archivo
+   LAYOUT: modest title, big model, view + layer controls, then mic card, track list, checklist */
+:root{color-scheme:light dark;--bg:light-dark(#f6f4f0,#111214);--ink:light-dark(#16171a,#ecebe8);--muted:light-dark(#5b5d64,#a3a4a8);--line:light-dark(#dcd7ce,#2c2d31);--card:light-dark(#fff,#18191c);--main:#e4412b;--pair:#2b5fd9;--room:#0f8b8d}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Archivo,system-ui,sans-serif;overflow-x:clip}
+.band{padding:clamp(20px,3vw,40px) max(5vw,16px);max-width:1240px;margin:0 auto}
+h1{font-size:clamp(30px,4.6vw,46px);line-height:1.05;font-stretch:112%;font-weight:800;margin:0 0 8px;text-wrap:balance}
+h2{font-size:20px;margin:0 0 10px;font-weight:700}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.fig{position:relative;height:clamp(380px,64vh,660px);border-radius:14px;overflow:hidden;background:light-dark(#e9e5de,#1a1b1e);touch-action:none}
+.fig canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.labels{position:absolute;inset:0;pointer-events:none}
+.lb{position:absolute;left:0;top:0;transform:translate(-50%,-100%);white-space:nowrap;font-size:13px;font-weight:600;padding:3px 8px;border-radius:999px;background:light-dark(rgba(255,255,255,.92),rgba(20,21,24,.9));color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.18);pointer-events:auto;cursor:pointer;border:2px solid transparent}
+.lb i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0}
+.lb.on{border-color:currentColor}
+.lb.dim{font-weight:500;font-size:13px;background:light-dark(rgba(22,23,26,.82),rgba(236,235,232,.88));color:light-dark(#fff,#111);pointer-events:none;transform:translate(-50%,-50%)}
+.lb.zone{background:none;box-shadow:none;color:var(--muted);font-weight:700;pointer-events:none}
+.hide-dims .lb.dim,.hide-labels .lb:not(.dim){display:none}
+.meters{position:absolute;right:10px;top:10px;width:190px;padding:10px 12px;border-radius:10px;font-size:13px;background:light-dark(rgba(255,255,255,.92),rgba(20,21,24,.9));color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.2);pointer-events:none}
+.meters[hidden]{display:none}.meters b{display:block;margin-bottom:6px}.meters div{display:grid;grid-template-columns:86px minmax(0,1fr);align-items:center;gap:8px;margin:4px 0}
+.meters i{display:block;height:8px;border-radius:4px;background:light-dark(#e3dfd6,#33343a);overflow:hidden}.meters u{display:block;height:100%;width:0;border-radius:4px}
+.hint{position:absolute;left:12px;bottom:10px;font-size:13px;color:var(--muted);pointer-events:none}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.bar span{font-size:13px;color:var(--muted);margin-right:2px}
+button{font:inherit;font-size:15px;min-height:44px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer}
+button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible{outline:3px solid var(--pair);outline-offset:2px}
+.sep{flex-basis:100%;height:0}
+.grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px}
+@media(max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h3{margin:0 0 4px;font-size:22px;line-height:1.15}
+.tag{font-size:13px;font-weight:700;margin:0 0 10px}
+.card dl{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:6px 12px;margin:14px 0 0;font-size:15px}
+.card dt{color:var(--muted)}.card dd{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chips button{font-size:14px;min-height:40px}
+.chips button i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--muted);font-weight:600}
+td.n{white-space:nowrap;font-weight:600}
+ol{margin:0;padding-left:1.3em}ol li{margin:6px 0}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+.err{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted)}
+@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--muted)}.stack td:empty{display:none}.card dl{grid-template-columns:minmax(0,1fr)}.card dt{margin-top:6px}}
+
+.phase{margin:10px 0 0;font-weight:600;min-height:3.1em}
+input[type=range]{flex:1 1 220px;max-width:420px;min-height:44px;accent-color:var(--pair)}
+.lb{font-size:13px}.lb.on{border-color:var(--main)}
+</style>
+</head>
+<body>
+<div class="band">
+  <h1>Inside a concert grand</h1>
+  <p class="sub">A 2.74 m concert grand opened up layer by layer, and one key's action in slow motion: key, wippen, jack, hammer, damper and string. Drag to orbit, pinch or scroll to zoom.</p>
+</div>
+<div class="band" style="padding-top:0">
+  <div class="fig" id="fig"><div class="labels" id="labels"></div><div class="hint" id="hint">Tap a key to play it</div></div>
+  <div class="bar" id="modes"><span>Model</span>
+    <button data-m="whole" aria-pressed="true">Whole piano</button>
+    <button data-m="action" aria-pressed="false">Action of one key</button>
+    <button id="lblbtn" aria-pressed="true">Labels</button>
+    <button id="sndbtn" aria-pressed="true">Sound</button>
+  </div>
+  <div id="wholeUI">
+    <div class="bar" id="layers"><span>Show</span>
+      <button data-l="lid" aria-pressed="true">Lid and music desk</button>
+      <button data-l="plate" aria-pressed="true">Iron plate</button>
+      <button data-l="strings" aria-pressed="true">Strings</button>
+      <button data-l="dampers" aria-pressed="true">Dampers</button>
+      <button data-l="board" aria-pressed="true">Soundboard</button>
+      <button data-l="action" aria-pressed="true">Keys and hammers</button>
+      <button data-l="xray" aria-pressed="false">See-through case</button>
+    </div>
+    <div class="bar"><span>Explode</span>
+      <input type="range" id="explode" min="0" max="100" value="0" aria-label="Explode the layers">
+      <button id="playbtn" aria-pressed="false">Play a piece</button>
+    </div>
+  </div>
+  <div id="actionUI" hidden>
+    <div class="bar"><span>Motion</span>
+      <button id="strike" aria-pressed="false">Strike a note</button>
+      <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Step through the key stroke">
+    </div>
+    <p class="phase" id="phase"></p>
+  </div>
+  <p class="note">The piano is modelled by hand to the real overall size of a concert grand, with 88 keys and hammers, 236 strings, and the standard double-escapement grand action. Part shapes and positions are simplified for teaching and are not a maker's drawings. The action plays about 30 times slower than a real key stroke, and string movement is exaggerated so it can be seen.</p>
+</div>
+<div class="band grid" style="padding-top:8px">
+  <div>
+    <div class="chips" id="chips"></div>
+    <div class="card" id="info"></div>
+  </div>
+  <div class="card">
+    <h2>What happens when a key goes down</h2>
+    <ol>
+      <li>The key is a lever. Its front goes down about 10 mm and its back end rises.</li>
+      <li>The capstan on the key lifts the wippen, which carries the jack.</li>
+      <li>The jack pushes the knuckle under the hammer shank, and the hammer swings up about 45 mm.</li>
+      <li>Just before the string, the jack's toe meets the let-off button. The jack slips out from under the knuckle, so the hammer flies the last 2 mm freely.</li>
+      <li>The hammer strikes the string and bounces back at once, leaving the string free to ring. Meanwhile the back of the key has lifted the damper off the string.</li>
+      <li>The backcheck catches the falling hammer. The repetition lever holds it part-way up, so the jack can slide back under and the note can be repeated quickly.</li>
+      <li>When the key is released, everything returns and the damper drops onto the string and stops the sound.</li>
+    </ol>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+{
+const fig=document.getElementById('fig'),labelsEl=document.getElementById('labels'),infoEl=document.getElementById('info'),chipsEl=document.getElementById('chips');
+const PARTS={
+ soundboard:['Soundboard','Whole piano','A thin, slightly arched sheet of spruce about 8 to 9 mm thick. The strings alone move very little air. The bridges pass their vibration to the soundboard, and its large surface turns it into sound. This is the part the microphones are really listening to.'],
+ ribs:['Ribs','Whole piano','Spruce bars glued under the soundboard, across the grain. They keep the board arched against the downward pressure of the strings and spread vibration across it. Raise the Explode slider and look from below to see them.'],
+ plate:['Cast-iron plate','Whole piano','The golden iron frame. It carries the combined pull of all the strings, roughly 20 tonnes, so the wooden case does not have to. Its bars rise above the strings between the string sections.'],
+ pins:['Tuning pins','Whole piano','One steel pin per string, driven into the laminated wooden pinblock under the front of the plate. Turning a pin changes the string tension and so the pitch.'],
+ treble:['Tenor and treble strings','Whole piano','Plain steel wire, three strings per note. They get shorter toward the top: about 5 cm of speaking length at the highest note.'],
+ bass:['Bass strings','Whole piano','Steel wound with copper to add mass, one string per note at the bottom and two further up. They cross over the tenor strings at an angle ("overstringing"), which lets them be longer and puts their bridge nearer the middle of the soundboard.'],
+ bridge:['Bridges','Whole piano','Hardwood strips glued to the soundboard. Each string presses down on a bridge and ends its speaking length there, so the bridge is where vibration enters the soundboard. The long curved one serves the tenor and treble, the short one the bass.'],
+ dampers:['Dampers','Whole piano','Felt pads resting on the strings. Each lifts when its key is pressed and falls back when it is released. The top 20 notes have none, because their sound dies away quickly anyway.'],
+ hammers:['Hammers','Whole piano','88 wooden hammers covered in compressed wool felt, in one straight line under the strings. They strike upward through the gap between the pinblock and the soundboard.'],
+ keys:['Keys','Whole piano','52 white and 36 black keys. Each is a long wooden lever. Only the front 15 cm shows; the rest runs back under the fallboard to lift the action.'],
+ rim:['Rim and braces','Whole piano','The curved case is bent from laminated hard maple. Heavy wooden braces underneath hold it rigid. A grand is open underneath, so the soundboard radiates both up and down.'],
+ lid:['Lid','Whole piano','Open on its long stick, the lid reflects the upward sound out toward the audience over the curved side.'],
+ key:['Key','Action','A wooden lever balanced on a pin in the balance rail. Pressing the front down about 10 mm raises the back end.'],
+ capstan:['Capstan','Action','A brass screw on the key that lifts the wippen. Turning it adjusts how far the hammer rests below the string.'],
+ wippen:['Wippen','Action','The lever between key and hammer. It is hinged at its back end and carries the jack and the repetition lever.'],
+ jack:['Jack','Action','The L-shaped piece that pushes the hammer up through the knuckle. When its toe reaches the let-off button it swings out from under the knuckle. This is the escapement: it frees the hammer so it cannot stay pressed against the string.'],
+ letoff:['Let-off button','Action','A fixed felt stop. It trips the jack when the hammer is about 2 mm from the string.'],
+ replever:['Repetition lever','Action','A sprung lever on the wippen. After the strike it holds the hammer part-way up so the jack can get back under the knuckle before the key has fully risen. This "double escapement" is what allows fast repeated notes on a grand.'],
+ knuckle:['Knuckle','Action','A small leather-covered roller under the hammer shank. The jack and the repetition lever push on it.'],
+ shank:['Hammer shank and flange','Action','The thin wooden arm that carries the hammer. It pivots on a pin in its flange, which is screwed to the hammer rail.'],
+ hammer:['Hammer','Action','A wooden moulding covered with dense wool felt. It travels about 45 mm to the string and touches it for only a few thousandths of a second. The hardness of the felt shapes the tone.'],
+ backcheck:['Backcheck','Action','A leather-covered pad on the back of the key. It catches the hammer as it falls back, so the hammer cannot bounce up and hit the string twice.'],
+ damper:['Damper','Action','Felt resting on the string, lifted by the back of the key through the damper lever and wire. It lifts before the hammer strikes and stops the string when the key comes up.'],
+ string:['String','Action','Stretched between the agraffe at the front and the bridge on the soundboard. The hammer strikes close to the front end, about one eighth of the way along.'],
+ agraffe:['Agraffe','Action','A brass stud screwed into the iron plate. The string passes through it, and it fixes the front end of the vibrating length.']
+};
+let sel='soundboard',mode='whole';
+function renderInfo(){const d=PARTS[sel];infoEl.textContent='';const h=document.createElement('h3'),t=document.createElement('p'),p=document.createElement('p');
+  h.textContent=d[0];t.className='tag';t.textContent=d[1];p.style.margin='0';p.textContent=d[2];infoEl.append(h,t,p);
+  chipsEl.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k===sel))}
+function renderChips(){chipsEl.textContent='';Object.keys(PARTS).filter(k=>(PARTS[k][1]==='Action')===(mode==='action')).forEach(k=>{const b=document.createElement('button');b.dataset.k=k;b.textContent=PARTS[k][0];b.onclick=()=>{sel=k;renderInfo()};chipsEl.append(b)})}
+renderChips();renderInfo();
+
+if(!window.THREE||!THREE.OrbitControls){const e=document.createElement('div');e.className='err';e.textContent='The 3D view could not load. Check your connection and reload.';fig.append(e)}
+else{
+const V=(x,y,z)=>new THREE.Vector3(x,y,z),UP=V(0,1,0);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;fig.prepend(renderer.domElement);
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(40,1,0.01,60),controls=new THREE.OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;
+try{const pm=new THREE.PMREMGenerator(renderer),es=new THREE.Scene();es.add(new THREE.Mesh(new THREE.BoxGeometry(20,10,20),new THREE.MeshBasicMaterial({color:0x34302c,side:THREE.BackSide})));
+  [[0,4.9,0,12,.1,6,0xfff4e0],[-9.9,1,0,.1,5,10,0x8a7a66],[9.9,1,2,.1,4,8,0x6a6058],[0,1,9.9,10,4,.1,0x9a8f84]].forEach(([x,y,z,w,h,d,c])=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshBasicMaterial({color:c}));m.position.set(x,y,z);es.add(m)});
+  scene.environment=pm.fromScene(es,0.03).texture;pm.dispose()}catch(e){}
+scene.add(new THREE.HemisphereLight(0xfff3e2,0x5a4a3c,0.5));
+const sun=new THREE.DirectionalLight(0xfff1dc,0.65);sun.position.set(-2.5,6,4);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.bias=-0.0004;Object.assign(sun.shadow.camera,{left:-3,right:3,top:3,bottom:-3,near:.5,far:20});scene.add(sun);
+const M=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.7,envMapIntensity:.35},o));
+const lacquer=new THREE.MeshPhysicalMaterial({color:0x060607,roughness:.12,clearcoat:1,clearcoatRoughness:.06,envMapIntensity:1.1,transparent:true});
+const brass=M('#b8923c',{metalness:.9,roughness:.3,envMapIntensity:1}),steel=M('#c4c8cc',{metalness:.9,roughness:.3,envMapIntensity:1}),copper=M('#b0683a',{metalness:.85,roughness:.4,envMapIntensity:1}),
+  iron=M('#9c7a35',{metalness:.8,roughness:.4,envMapIntensity:.9}),maple=M('#d9bd8f',{roughness:.6}),beech=M('#c69c62',{roughness:.6}),spruce=M('#e0c48e',{roughness:.7}),
+  feltW=M('#efe9db',{roughness:1}),feltR=M('#a8231c',{roughness:1}),feltG=M('#2f6b3a',{roughness:1}),dark=M('#1b1b1d',{roughness:.5}),ivory=M('#f3f0e8',{roughness:.35,envMapIntensity:.7});
+const box=(w,h,d)=>new THREE.BoxGeometry(w,h,d),cyl=(a,b,h,s=16)=>new THREE.CylinderGeometry(a,b,h,s);
+const add=(geo,mat,parent,x=0,y=0,z=0,sh=true)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=sh;m.receiveShadow=true;parent.add(m);return m};
+function rod(a,b,r,mat,parent){const m=add(cyl(r,r,1,10),mat,parent);m.position.copy(a).add(b).multiplyScalar(.5);m.scale.y=a.distanceTo(b);m.quaternion.setFromUnitVectors(UP,b.clone().sub(a).normalize());return m}
+const labels=[];function label(obj,pos,key,text){const el=document.createElement('div');el.className='lb';el.textContent=text||PARTS[key][0];el.onclick=()=>{sel=key;renderInfo()};labelsEl.append(el);labels.push({el,obj,pos,key,act:PARTS[key][1]==='Action'})}
+
+// ======================= WHOLE PIANO =======================
+const whole=new THREE.Group();scene.add(whole);
+const floor=add(new THREE.CircleGeometry(4.5,48),M('#8a6a45',{roughness:.6}),whole,0,0,0,false);floor.rotation.x=-Math.PI/2;
+const gCase=new THREE.Group(),gBoard=new THREE.Group(),gPlate=new THREE.Group(),gStr=new THREE.Group(),gDamp=new THREE.Group(),gAct=new THREE.Group(),gLid=new THREE.Group();whole.add(gCase,gBoard,gPlate,gStr,gDamp,gAct,gLid);
+function outline(t,x0,T){const p=T||((x,y)=>[x,y]);t.moveTo(...p(x0,-.78));t.lineTo(...p(x0,.78));t.lineTo(...p(1.2,.78));t.quadraticCurveTo(...p(1.42,.78),...p(1.40,.55));t.quadraticCurveTo(...p(1.36,.30),...p(1.0,.18));
+  t.bezierCurveTo(...p(.5,0),...p(.1,-.45),...p(-.3,-.70));t.quadraticCurveTo(...p(-.55,-.78),...p(-.8,-.78));t.lineTo(...p(x0,-.78));return t}
+const IN=(x,y)=>[.1+(x-.1)*.955,y*.92],IN2=(x,y)=>[.1+(x-.1)*.89,y*.83],FLAT=m=>{m.rotation.x=-Math.PI/2;return m};
+// curved-side limit: largest z inside the inner rim at a given x
+const edge=outline(new THREE.Shape(),-1.19,IN).getPoints(60);
+const zMax=x=>{let m=-9;edge.forEach(p=>{if(Math.abs(p.x-x)<.05&&-p.y>m)m=-p.y});return m<-8?.6:m};
+{ // case
+  const s=outline(new THREE.Shape(),-1.19);s.holes.push(outline(new THREE.Path(),-1.19,IN));
+  FLAT(add(new THREE.ExtrudeGeometry(s,{depth:.36,bevelEnabled:false,curveSegments:24}),lacquer,gCase,0,.62,0));
+  [[-.5,1.75,.02],[0,1.25,.25],[.42,.7,.5]].forEach(([z,len,rot])=>{add(box(len,.11,.07),beech,gCase,-.95+len/2*Math.cos(rot),.685,z-len/2*Math.sin(rot)*.4).rotation.y=rot*.4});
+  add(box(.09,.11,1.4),beech,gCase,-.66,.685,0);
+  [-.75,.75].forEach(z=>add(box(.2,.26,.06),lacquer,gCase,-1.28,.75,z));add(box(.24,.06,1.44),lacquer,gCase,-1.26,.65,0);add(box(.015,.03,1.44),lacquer,gCase,-1.372,.705,0);
+  [-.665,.665].forEach(z=>add(box(.17,.06,.1),lacquer,gCase,-1.275,.73,z));
+  [[-1.22,-.64],[-1.22,.64],[1.02,-.48]].forEach(([x,z])=>{add(box(.14,.1,.14),lacquer,gCase,x,.57,z);add(cyl(.062,.045,.42,4),lacquer,gCase,x,.31,z).rotation.y=Math.PI/4;add(cyl(.02,.02,.06,10),brass,gCase,x,.085,z);add(cyl(.032,.032,.05,14),brass,gCase,x,.034,z).rotation.x=Math.PI/2});
+  [-.09,.09].forEach(z=>rod(V(-1.08,.62,z),V(-1.08,.16,z*.8),.014,lacquer,gCase));add(box(.12,.07,.26),lacquer,gCase,-1.1,.13,0);[-.07,0,.07].forEach(z=>add(box(.11,.012,.035),brass,gCase,-1.2,.1,z));
+  label(gCase,V(1.3,.8,-.86),'rim');
+}
+{ // lid, fallboard, music desk
+  const piv=new THREE.Group();piv.position.set(0,.985,-.78);piv.rotation.x=-.72;gLid.add(piv);
+  FLAT(add(new THREE.ExtrudeGeometry(outline(new THREE.Shape(),-.86),{depth:.028,bevelEnabled:false,curveSegments:24}),lacquer,piv,0,0,.78));add(box(.33,.024,1.5),lacquer,piv,-.695,.042,.78);
+  rod(V(-.35,.98,.62),V(-.35,.985+Math.sin(.72)*1.4,-.78+Math.cos(.72)*1.4),.011,lacquer,gLid);
+  add(box(.02,.2,1.44),lacquer,gLid,-1.185,.84,0);add(box(.3,.02,.9),lacquer,gLid,-1.03,.99,0);add(box(.02,.26,.75),lacquer,gLid,-1.01,1.12,0).rotation.z=-.22;
+  label(piv,V(.4,.05,1.2),'lid');
+}
+// ---- scale design: where every string starts, is struck and ends ----
+const YS=.905,XS=-.78,KW=1.22/88,notes=[];
+for(let n=1;n<=88;n++){const z=-.61+(n-.5)*KW,bassN=n<=20;
+  const L=bassN?1.45+(20-n)*.03:.052*2**((88-n)/12.9),xf=XS-Math.min(.22,Math.max(.012,L/8));
+  const end=bassN?V(1.14-n*.03,YS+.02,-.50+n*.019):V(xf+L,YS,z-.25*Math.min(1,L/1.9)**1.5); // bass strings cross over the tenor strings
+  notes.push({n,z,L,xf,end,front:V(xf,YS+(bassN?.012:0),z),count:n<=8?1:n<=20?2:3,bass:bassN})}
+{ // soundboard, ribs, bridges
+  FLAT(add(new THREE.ShapeGeometry(outline(new THREE.Shape(),-.70,IN),24),M('#ead9b0',{roughness:.8,side:THREE.DoubleSide}),gBoard,0,.85,0));
+  for(let x=-.55;x<1.25;x+=.17){const z1=zMax(x)-.03,z0=-.7;if(z1-z0>.15)add(box(.026,.022,z1-z0),spruce,gBoard,x,.838,(z0+z1)/2)}
+  const mk=(list,w)=>{const im=new THREE.InstancedMesh(box(1,.05,w),M('#9a6b3c',{roughness:.6}),list.length-1),d=new THREE.Object3D();
+    for(let i=0;i<list.length-1;i++){const a=list[i].end,b=list[i+1].end,dx=b.x-a.x,dz=b.z-a.z;d.position.set((a.x+b.x)/2,.877,(a.z+b.z)/2);d.rotation.set(0,-Math.atan2(dz,dx),0);d.scale.set(Math.hypot(dx,dz)+.012,1,1);d.updateMatrix();im.setMatrixAt(i,d.matrix)}im.castShadow=true;gBoard.add(im)};
+  mk(notes.slice(20),.03);mk(notes.slice(0,20),.035);
+  label(gBoard,V(.75,.86,-.05),'soundboard');label(gBoard,V(.3,.82,-.55),'ribs');label(gBoard,V(.35,.9,.22),'bridge');
+}
+{ // iron plate: perimeter ring, pin web that follows the front string ends, struts above the strings
+  const s=outline(new THREE.Shape(),-.72,IN);s.holes.push(outline(new THREE.Path(),-.60,IN2));
+  FLAT(add(new THREE.ExtrudeGeometry(s,{depth:.02,bevelEnabled:false,curveSegments:24}),iron,gPlate,0,.868,0));
+  const w=new THREE.Shape();w.moveTo(-1.17,.70);w.lineTo(-1.17,-.70);notes.slice().reverse().forEach(o=>w.lineTo(o.xf+.004,-o.z));w.lineTo(notes[0].xf+.004,.70);
+  FLAT(add(new THREE.ExtrudeGeometry(w,{depth:.03,bevelEnabled:false}),iron,gPlate,0,.868,0));
+  [[-.345,1.2,-.45],[.0,.55,-.12],[.3,.1,.3]].forEach(([z0,x1,z1])=>rod(V(-.95,.93,z0),V(x1,.93,z1),.016,iron,gPlate));
+  rod(V(-.95,.93,-.69),V(-.95,.93,.66),.014,iron,gPlate);
+  const nPins=notes.reduce((a,o)=>a+o.count,0),pins=new THREE.InstancedMesh(cyl(.0035,.0035,.04,8),steel,nPins),d=new THREE.Object3D();let k=0;
+  notes.forEach(o=>{o.pins=[];for(let j=0;j<o.count;j++){const pz=o.z+(j-(o.count-1)/2)*.0042,px=o.xf-.05-((o.n+j)%3)*.028-(o.bass?.02:0);o.pins.push(V(px,YS+.004,pz));d.position.set(px,.915,pz);d.updateMatrix();pins.setMatrixAt(k++,d.matrix)}});gPlate.add(pins);
+  label(gPlate,V(.55,.95,-.6),'plate');label(gPlate,V(-1.08,.94,.25),'pins');
+}
+// strings: one thin cylinder per string, from tuning pin over the front termination and bridge to the hitch pin
+const strSteel=new THREE.InstancedMesh(cyl(1,1,1,6),steel,204),strCu=new THREE.InstancedMesh(cyl(1,1,1,6),copper,32);gStr.add(strSteel,strCu);
+const sd=new THREE.Object3D();
+function setString(o,j,off){const a=o.pins[j],dz=(j-(o.count-1)/2)*.0042,dir=o.end.clone().sub(o.front).normalize(),b=o.end.clone().addScaledVector(dir,.07);b.z+=dz+off;
+  const r=o.bass?.0022-o.n*.00004:.0007;sd.position.copy(a).add(b).multiplyScalar(.5);sd.position.y+=off*.6;sd.scale.set(r,a.distanceTo(b),r);sd.quaternion.setFromUnitVectors(UP,b.clone().sub(a).normalize());sd.updateMatrix();o.mesh.setMatrixAt(o.i0+j,sd.matrix)}
+{let a=0,b=0;notes.forEach(o=>{o.mesh=o.bass?strCu:strSteel;o.i0=o.bass?b:a;if(o.bass)b+=o.count;else a+=o.count;for(let j=0;j<o.count;j++)setString(o,j,0)});
+  label(gStr,V(-.2,.93,.2),'treble');label(gStr,V(.2,.96,-.3),'bass')}
+// dampers (notes 1 to 68), hammers and keys: instanced, with per-note matrices so each can move
+const DN=68,damp=new THREE.InstancedMesh(box(.045,.022,.011),dark,DN),dampF=new THREE.InstancedMesh(box(.045,.008,.011),feltW,DN);gDamp.add(damp,dampF);
+const head=new THREE.InstancedMesh(box(.014,.022,.0105),feltW,88),mould=new THREE.InstancedMesh(box(.011,.055,.0095),maple,88),shank=new THREE.InstancedMesh(box(.13,.006,.006),maple,88);gAct.add(head,mould,shank);
+const wk=new THREE.InstancedMesh(box(.15,.022,1.22/52*.92),ivory,52),bk=new THREE.InstancedMesh(box(.095,.012,.0125),M('#0c0c0d',{roughness:.3}),36);gAct.add(wk,bk);
+add(box(.36,.02,1.3),beech,gAct,-1.0,.7,0);add(box(.03,.03,1.26),beech,gAct,-.93,.83,0);
+{let w=0,b=0;const W52=1.22/52;notes.forEach(o=>{const pc=(o.n+8)%12,black=[1,3,6,8,10].includes(pc);o.black=black;
+  if(black){o.kz=-.61+w*W52;o.ki=b++}else{o.kz=-.61+(w+.5)*W52;o.ki=w++}})}
+const HP=YS-.0855,mt=new THREE.Matrix4(),mr=new THREE.Matrix4(),mo=new THREE.Matrix4();
+function pose(o,p,th,lift){ // p: key travel 0..1, th: hammer angle, lift: damper lift in metres
+  mt.makeTranslation(-1.10,.724,o.kz);mr.makeRotationZ(.041*p);mo.makeTranslation(o.black?-.1425:-.17,o.black?.018:0,0);(o.black?bk:wk).setMatrixAt(o.ki,mt.clone().multiply(mr).multiply(mo));
+  mt.makeTranslation(XS-.13,HP,o.z);mr.makeRotationZ(th);const base=mt.clone().multiply(mr);
+  shank.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.065,0,0)));mould.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.13,-.002,0)));head.setMatrixAt(o.n-1,base.clone().multiply(mo.makeTranslation(.13,.034,0)));
+  if(o.n<=DN){const y=YS+(o.bass?.012:0)+.006+lift;damp.setMatrixAt(o.n-1,mo.makeTranslation(XS+.075,y+.014,o.z));dampF.setMatrixAt(o.n-1,mo.makeTranslation(XS+.075,y,o.z))}}
+notes.forEach(o=>pose(o,0,-.04,0));
+label(gAct,V(-1.3,.76,.45),'keys');label(gAct,V(XS,.86,-.2),'hammers');label(gDamp,V(XS+.08,.95,.05),'dampers');
+// playing a note
+const live=new Map();let ac=null,master=null,sndOn=true;
+function audio(){try{if(!ac){const A=window.AudioContext||window.webkitAudioContext;ac=new A();master=ac.createGain();master.gain.value=.5;master.connect(ac.destination)}ac.resume()}catch(e){ac=null}}
+function tone(n,vel){if(!ac||!sndOn||ac.state!=='running')return;const t=ac.currentTime,f=27.5*2**((n-1)/12),g=ac.createGain(),dur=Math.max(.5,3.2-n*.028);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vel*.24,t+.006);g.gain.exponentialRampToValueAtTime(.0008,t+dur);g.connect(master);
+  [['triangle',f,1],['sine',f*2,.35],['sine',f*3,.12]].forEach(([ty,fr,a])=>{if(fr>9000)return;const o=ac.createOscillator(),og=ac.createGain();o.type=ty;o.frequency.value=fr;og.gain.value=a;o.connect(og);og.connect(g);o.start(t);o.stop(t+dur+.05)})}
+function playNote(n,vel=.8,hold=.35){const o=notes[n-1];if(!o)return;live.set(n,{o,t:0,hold,struck:false,vel})}
+function stepNotes(dt){if(!live.size)return;const tt=performance.now()/1000;
+  live.forEach((s,n)=>{s.t+=dt;const t=s.t,o=s.o,rel=t-(.07+s.hold);
+    const p=t<.07?t/.07:rel<0?1:Math.max(0,1-rel/.12);
+    const th=t<.06?-.04+.37*(t/.06):t<.12?.33-.11*((t-.06)/.06):rel<0?.22:-.04+.26*p;
+    if(!s.struck&&t>=.06){s.struck=true;tone(n,s.vel)}
+    const amp=t<.06?0:Math.exp(-(t-.06)*(n>DN?2.5:1.2))*(rel>0&&n<=DN?Math.exp(-rel*25):1)*(o.bass?.004:.0022);
+    pose(o,p,th,p*.008);for(let j=0;j<o.count;j++)setString(o,j,amp*Math.sin(tt*(55+n)+j*2));
+    if(rel>.12&&amp<.00005){pose(o,0,-.04,0);for(let j=0;j<o.count;j++)setString(o,j,0);live.delete(n)}});
+  [wk,bk,head,mould,shank,damp,dampF,strSteel,strCu].forEach(m=>m.instanceMatrix.needsUpdate=true)}
+// the piece: opening bars of Bach's Prelude in C major, BWV 846
+const BARS=[[40,44,47,52,56],[40,42,49,54,57],[39,42,47,54,57],[40,44,47,52,56]],PAT=[0,1,2,3,4,2,3,4];let piece=false,pn=0,pt=0;
+function stepPiece(dt){if(!piece)return;pt-=dt;while(pt<=0){const k=PAT[pn%8];playNote(BARS[Math.floor(pn/16)%4][k],k===0?1:.7,k<2?.9:.3);pn++;pt+=.26}}
+
+// ======================= ACTION OF ONE KEY =======================
+const action=new THREE.Group();action.visible=false;scene.add(action);
+const T=.0125,Hx=.0867,Hy=.160,YSA=.2455,TW=.0786,PL=.88,TH0=-.04,THS=.33,THC=.22;
+add(box(.66,.02,.09),beech,action,.1,-.012,0);add(box(.04,.02,.06),beech,action,0,.009,0);rod(V(0,.018,0),V(0,.05,0),.002,steel,action);
+add(box(.03,.012,.06),beech,action,-.21,.004,0);add(cyl(.009,.009,.004,14),feltG,action,-.21,.012,0);add(box(.03,.005,.06),feltG,action,.28,.0105,0);
+const aKey=new THREE.Group();aKey.position.set(0,.030,0);action.add(aKey);
+add(box(.54,.022,T),maple,aKey,.03,0,0);add(box(.15,.003,T),ivory,aKey,-.165,.0125,0);add(box(.003,.022,T),ivory,aKey,-.2405,0,0);
+add(cyl(.004,.004,.014,10),brass,aKey,.13,.018,0);rod(V(.235,.011,0),V(.238,.1,0),.0018,steel,aKey);add(box(.012,.032,T),feltG,aKey,.236,.112,0).rotation.z=.12;
+const aWip=new THREE.Group();aWip.position.set(.20,.090,0);action.add(aWip);
+add(box(.11,.014,T),beech,aWip,-.0475,0,0);add(box(.02,.03,T),beech,aWip,-.07,-.021,0);add(box(.02,.004,T),feltR,aWip,-.07,-.0375,0);
+add(box(.006,.04,T*.8),beech,aWip,-.045,.027,0);
+const aRep=add(box(.10,.006,T),beech,aWip,-.065,.046,0);
+add(box(.02,.03,.06),beech,action,.212,.07,0);
+const aJack=new THREE.Group();aJack.position.set(-.095,0,0);aWip.add(aJack);
+add(box(.007,.052,T*.7),beech,aJack,0,.026,0);add(box(.035,.007,T*.7),beech,aJack,-.0175,.004,0);
+rod(V(.075,.11,0),V(.075,.168,0),.0016,steel,action);const aLet=add(cyl(.006,.006,.006,14),feltR,action,.075,.107,0);
+const aHam=new THREE.Group();aHam.position.set(Hx,Hy,0);action.add(aHam);
+add(box(.13,.006,.006),maple,aHam,.065,0,0);const aKn=add(cyl(.006,.006,T*.9,14),M('#c9b18a'),aHam,.0183,-.012,0);aKn.rotation.x=Math.PI/2;
+add(box(.012,.06,T*.85),maple,aHam,.13,-.003,0);const aHead=add(cyl(.0112,.0112,T*.95,24),M('#fbf8f0',{roughness:1}),aHam,.13,.031,0);aHead.rotation.x=Math.PI/2;aHead.scale.z=1.25;add(box(.02,.012,T*.95),M('#fbf8f0',{roughness:1}),aHam,.13,.022,0);
+add(box(.02,.012,T),beech,action,Hx-.008,Hy+.003,0);add(box(.03,.026,.06),beech,action,.062,.183,0);add(cyl(.0025,.0025,.012,8),brass,action,.1,.172,0);
+const aDam=new THREE.Group();aDam.position.set(.44,.047,0);action.add(aDam);
+add(box(.15,.008,T*.8),beech,aDam,-.075,0,0);rod(V(-.13,.004,0),V(-.13,YSA-.047+.022,0),.0016,steel,aDam);
+const aDh=add(box(.03,.012,T),dark,aDam,-.13,YSA-.047+.019,0);add(box(.03,.008,T),feltW,aDam,-.13,YSA-.047+.009,0);add(box(.025,.03,.06),beech,action,.455,.03,0);
+add(box(.18,.035,.07),iron,action,.035,.2225,0);const aAg=add(cyl(.004,.004,.02,10),brass,action,.12,YSA-.004,0);add(cyl(.003,.003,.05,8),steel,action,-.01,.255,0);
+rod(V(-.01,.262,0),V(.12,YSA,0),.0008,steel,action);
+const BX=.62;add(box(.022,.03,.07),M('#9a6b3c'),action,BX,YSA-.016,0);add(box(.34,.008,.09),spruce,action,.56,YSA-.035,0);rod(V(BX,YSA,0),V(.74,YSA-.005,0),.0008,steel,action);
+const SN=48,sGeo=new THREE.BufferGeometry();sGeo.setAttribute('position',new THREE.Float32BufferAttribute(new Float32Array((SN+1)*3),3));
+const aStr=new THREE.Line(sGeo,new THREE.LineBasicMaterial({color:0xf2f2f2}));action.add(aStr);
+const lens=new THREE.Shape();lens.moveTo(.12,0);for(let i=0;i<=SN;i++)lens.lineTo(.12+(BX-.12)*i/SN,Math.sin(Math.PI*i/SN));for(let i=SN;i>=0;i--)lens.lineTo(.12+(BX-.12)*i/SN,-Math.sin(Math.PI*i/SN));
+const aEnv=new THREE.Mesh(new THREE.ShapeGeometry(lens),new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:.25,depthWrite:false,side:THREE.DoubleSide}));aEnv.position.y=YSA;action.add(aEnv);
+[[aKey,V(-.12,-.012,0),'key'],[aKey,V(.13,.03,0),'capstan'],[aWip,V(-.005,-.012,0),'wippen'],[aJack,V(-.03,.0,0),'jack'],[aLet,V(0,.01,0),'letoff'],[aRep,V(.04,.012,0),'replever'],[aKn,V(0,0,0),'knuckle'],
+ [aHam,V(.075,.012,0),'shank'],[aHead,V(.012,.0,.0),'hammer'],[aKey,V(.25,.125,0),'backcheck'],[aDh,V(0,.016,0),'damper'],[action,V(.47,YSA+.012,0),'string'],[aAg,V(0,.018,0),'agraffe']].forEach(([o,p,k])=>label(o,p,k));
+const ease=x=>x*x*(3-2*x),UL=.4*(()=>{let a=0,b=1;for(let i=0;i<30;i++){const m=(a+b)/2;ease(m)<PL?a=m:b=m}return a})(),USK=UL+.03,UCH=UL+.10,UREL=.62;
+let au=0,aPlaying=false,aStruck=false,dampDownU=2;
+const phaseEl=document.getElementById('phase'),scrub=document.getElementById('scrub'),strikeBtn=document.getElementById('strike');
+function setAction(u){au=u;const p=u<.4?ease(u/.4):u<UREL?1:1-ease((u-UREL)/(1-UREL));
+  aKey.rotation.z=-.021+.042*p;aWip.rotation.z=-TW*p;aJack.rotation.z=p>PL?(p-PL)/(1-PL)*.28:0;
+  const con=TH0+(.095*Math.sin(TW*Math.min(p,PL)))/.0183;let th;
+  if(u<=UL)th=con;else if(u<USK)th=con+(THS-con)*((u-UL)/(USK-UL));else if(u<UCH)th=THS-(THS-THC)*ease((u-USK)/(UCH-USK));else if(u<UREL)th=THC;else th=TH0+(THC-TH0)*p;
+  aHam.rotation.z=th;const rise=.29*.042*p,lift=Math.max(0,rise-.004)/.15;aDam.rotation.z=-lift;
+  let amp=0;if(u>=USK){amp=Math.exp(-(u-USK)*1.3);if(u>UREL&&lift<=0){if(dampDownU>u||dampDownU<UREL)dampDownU=u;amp*=Math.exp(-(u-dampDownU)*60)}}aAmp=amp;
+  phaseEl.textContent=u<.02?'At rest: the hammer lies on the repetition lever, and the damper rests on the string.':u<=UL?'The key goes down. The capstan lifts the wippen, and the jack pushes the hammer up.':u<USK?'Let-off: the jack slips out from under the knuckle. The hammer flies the last 2 mm on its own.':u<USK+.02?'Strike: the hammer touches the string for an instant.':u<UREL?'The hammer has bounced back and is caught by the backcheck. The damper is up, so the string rings.':u<.98?'The key comes up. The jack slides back under the knuckle, and the damper falls and stops the string.':'Back at rest, ready for the next note.'}
+let aAmp=0;
+function stepAction(dt,t){if(aPlaying){const u=Math.min(1,au+dt/6);if(!aStruck&&u>=USK){aStruck=true;tone(40,.8)}setAction(u);scrub.value=Math.round(u*1000);if(u>=1){aPlaying=false;strikeBtn.setAttribute('aria-pressed','false');strikeBtn.textContent='Strike a note'}}
+  const pos=sGeo.attributes.position,A=aAmp*.006;for(let i=0;i<=SN;i++){const s=i/SN;pos.setXYZ(i,.12+(BX-.12)*s,YSA+A*(Math.sin(Math.PI*s)*Math.sin(t*38)+.3*Math.sin(2*Math.PI*s)*Math.sin(t*76)),0)}pos.needsUpdate=true;
+  aEnv.scale.y=Math.max(.0001,A);aEnv.material.opacity=.28*Math.min(1,aAmp*3)}
+strikeBtn.onclick=()=>{audio();if(aPlaying){aPlaying=false}else{if(au>=1||au<=0){au=0;dampDownU=2}aStruck=au>=USK;aPlaying=true}strikeBtn.setAttribute('aria-pressed',aPlaying);strikeBtn.textContent=aPlaying?'Pause':'Strike a note'};
+scrub.oninput=()=>{aPlaying=false;strikeBtn.setAttribute('aria-pressed','false');strikeBtn.textContent='Strike a note';dampDownU=2;setAction(scrub.value/1000)};
+setAction(0);
+
+// ======================= UI =======================
+const CAM={whole:[V(-2.0,2.1,2.3),V(0,.85,0)],action:[V(.2,.17,.5),V(.2,.135,0)]};
+function setMode(m){CAM[mode]=[camera.position.clone(),controls.target.clone()];mode=m;whole.visible=m==='whole';action.visible=m==='action';
+  camera.position.copy(CAM[m][0]);controls.target.copy(CAM[m][1]);controls.minDistance=m==='whole'?.5:.08;controls.maxDistance=m==='whole'?9:1.6;controls.maxPolarAngle=m==='whole'?Math.PI:Math.PI*.6;
+  document.getElementById('wholeUI').hidden=m!=='whole';document.getElementById('actionUI').hidden=m!=='action';document.getElementById('hint').textContent=m==='whole'?'Tap a key to play it':'Side view of one key, about life size';
+  document.querySelectorAll('#modes button[data-m]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));sel=m==='whole'?'soundboard':'jack';renderChips();renderInfo();
+  if(m!=='whole'){piece=false;playBtn.setAttribute('aria-pressed','false');playBtn.textContent='Play a piece'}if(m!=='action')aPlaying=false}
+document.querySelectorAll('#modes button[data-m]').forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+const playBtn=document.getElementById('playbtn');playBtn.onclick=()=>{audio();piece=!piece;pt=0;playBtn.setAttribute('aria-pressed',piece);playBtn.textContent=piece?'Stop':'Play a piece'};
+document.getElementById('sndbtn').onclick=e=>{sndOn=!sndOn;e.currentTarget.setAttribute('aria-pressed',sndOn)};
+document.getElementById('lblbtn').onclick=e=>{const on=e.currentTarget.getAttribute('aria-pressed')!=='true';e.currentTarget.setAttribute('aria-pressed',on);fig.classList.toggle('hide-labels',!on)};
+const LAY={lid:gLid,plate:gPlate,strings:gStr,dampers:gDamp,board:gBoard,action:gAct};
+document.querySelectorAll('#layers button').forEach(b=>b.onclick=()=>{const on=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',on);const l=b.dataset.l;if(l==='xray'){lacquer.opacity=on?.18:1;lacquer.depthWrite=!on}else LAY[l].visible=on});
+const ex=document.getElementById('explode');function explode(){const e=ex.value/100;gLid.position.y=1.0*e;gPlate.position.y=gStr.position.y=gDamp.position.y=.55*e;gBoard.position.y=.25*e;gAct.position.x=-.85*e}ex.oninput=explode;
+const ray=new THREE.Raycaster(),ptr=new THREE.Vector2();let down=null;
+renderer.domElement.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY]});
+renderer.domElement.addEventListener('pointerup',e=>{if(mode!=='whole'||!down||Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;
+  const r=renderer.domElement.getBoundingClientRect();ptr.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(ptr,camera);
+  const hit=ray.intersectObjects([bk,wk])[0];if(!hit)return;const o=notes.find(o=>o.black===(hit.object===bk)&&o.ki===hit.instanceId);if(o){audio();playNote(o.n,.85,.5);sel='keys';renderInfo()}});
+function applyTheme(){const t=document.documentElement.dataset.theme,d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;scene.background=new THREE.Color(d?'#1a1b1e':'#d9d4ca')}
+applyTheme();new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
+camera.position.copy(CAM.whole[0]);controls.target.copy(CAM.whole[1]);controls.minDistance=.5;controls.maxDistance=9;
+const ro=new ResizeObserver(()=>{const w=fig.clientWidth,h=fig.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()});ro.observe(fig);
+const tmp=new THREE.Vector3();let lastT=0;
+function loop(t){requestAnimationFrame(loop);const dt=Math.min(.05,Math.max(0,(t-lastT)/1000));lastT=t;
+  if(mode==='whole'){stepPiece(dt);stepNotes(dt)}else stepAction(dt,t/1000);
+  controls.update();renderer.render(scene,camera);const w=fig.clientWidth,h=fig.clientHeight;
+  labels.forEach(l=>{let vis=l.act===(mode==='action');if(vis){let o=l.obj;while(o){if(!o.visible){vis=false;break}o=o.parent}}
+    if(vis){l.obj.localToWorld(tmp.copy(l.pos)).project(camera);vis=tmp.z<1&&Math.abs(tmp.x)<1.02&&Math.abs(tmp.y)<1.02}
+    l.el.style.visibility=vis?'visible':'hidden';l.el.classList.toggle('on',l.key===sel);if(vis)l.el.style.transform=`translate(${(tmp.x*.5+.5)*w}px,${(-tmp.y*.5+.5)*h}px) translate(-50%,-100%)`})}
+requestAnimationFrame(loop);
+}
+}
+</script>
+</body>
+</html>
