@@ -132,7 +132,7 @@ const INFO={
  h6a:{name:'Zoom H6 #1',color:C.main,tag:'Main recorder and preamp · 4 tracks',rows:[['Capsule','Built-in X/Y set to 120°, facing forward'],['Shaded field','The pair covers 120° in total. The two mics overlap in the middle, so the sweet spot is picked up by both'],['Height','1.5 m'],['Place','≈1.83 m (6 ft) out from the curved side, shifted a little to the right (toward the tail)'],['Aim','Tilted slightly left onto the sweet spot, the middle of the open lid'],['Also','Preamp and 48 V phantom for both C214s. Inputs 3 and 4 are both on the right side of the recorder, 3 above 4']],text:'This is the main stereo image. The 120° setting gives a wider picture than 90°. Fine-tune the height and angle on headphones.'},
  c214L:{name:'AKG C214 · L',color:C.pair,tag:'Spaced pair · Input 3 on H6 #1',rows:[['Pattern','Large-diaphragm cardioid'],['Height','1.5 m'],['Distance','≈1.83 m (6 ft) beyond the tail'],['Side','Bass (back of the stage)'],['Aim','At the piano, angled slightly toward its centre']],text:'It is called L because it carries the bass, the way the pianist hears it. If you stand behind the pair facing the piano, this mic is on your right.'},
  c214R:{name:'AKG C214 · R',color:C.pair,tag:'Spaced pair · Input 4 on H6 #1',rows:[['Pattern','Large-diaphragm cardioid'],['Height','1.5 m'],['Spacing','≈1.5–1.6 m from L, a little wider than the keyboard'],['Side','Treble (toward the audience)'],['Aim','At the piano, angled slightly toward its centre']],text:'The wide spacing gives a broad image. If the centre sounds thin, the H6 #1 X/Y fills it in the mix.'},
- h6b:{name:'Zoom H6 #2',color:C.room,tag:'Room / "echo" · 2 tracks',rows:[['Capsule','Built-in X/Y set to 120°, facing backward (away from the stage)'],['Shaded field','The pair covers 120° in total, with the two mics overlapping in the middle'],['Height','1.5 m above the floor of its row'],['Place','In the raked seating, past the stage edge'],['Aim','Toward the back of the hall, to catch reflections rather than the direct piano sound']],text:'This recorder collects the hall’s reverb, which you blend in under the close mics. Facing it backward keeps the direct sound low. The exact row isn’t fixed in the plan, so the model shows an example position in the fourth row.'}
+ h6b:{name:'Zoom H6 #2',color:C.room,tag:'Room / "echo" · 2 tracks',rows:[['Capsule','Built-in X/Y set to 120°, facing backward (away from the stage)'],['Shaded field','The pair covers 120° in total, with the two mics overlapping in the middle'],['Height','1.5 m above the floor of its row'],['Place','On a tripod standing in the gap between the third and fourth rows of seats, at the centre of the hall'],['Aim','Toward the back of the hall, to catch reflections rather than the direct piano sound']],text:'This recorder collects the hall’s reverb, which you blend in under the close mics. Facing it backward keeps the direct sound low. The exact row isn’t fixed in the plan, so the model shows an example position between the third and fourth rows.'}
 };
 const ORDER=['piano','h6a','c214L','c214R','h6b'];
 let sel='h6a';
@@ -189,7 +189,7 @@ function wood(base,dk,planks,vert){return (g,w,h)=>{g.fillStyle=base;g.fillRect(
 
 // ---------- Hall (proportions approximate) ----------
 const hall=new THREE.Group(),upper=new THREE.Group();scene.add(hall);hall.add(upper);
-const X0=-7.7,X1=8.3,Z0=-4.3,Z1=15.6,HC=9,CX=(X0+X1)/2,W=X1-X0;
+const X0=-6.4,X1=7.0,Z0=-4.3,Z1=15.6,HC=9,CX=(X0+X1)/2,W=X1-X0;
 const STAGE_FRONT=4.0,ROW0=4.9,ROWD=0.95,NROW=11,rowY=r=>r*0.33;
 const plane=(w,h,mat,x,y,z,rx,ry,parent)=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),mat);m.position.set(x,y,z);m.rotation.set(rx,ry,0);m.receiveShadow=true;parent.add(m);return m};
 plane(W,STAGE_FRONT-Z0,M('#ffffff',{map:tex(512,512,wood('#a97d4c','#5a3c1e',10,false),7,4),roughness:.45,envMapIntensity:.25}),CX,0,(Z0+STAGE_FRONT)/2,-Math.PI/2,0,scene);
@@ -197,8 +197,8 @@ const carpet=M('#4a4f58',{roughness:.95});
 plane(W,ROW0-.5+ROWD-STAGE_FRONT,carpet,CX,.002,(STAGE_FRONT+ROW0-.5+ROWD)/2,-Math.PI/2,0,scene);
 for(let r=1;r<NROW;r++)add(box(W,rowY(r),ROWD),carpet,scene,CX,rowY(r)/2,ROW0-.5+r*ROWD+ROWD/2);
 {const z=ROW0-.5+NROW*ROWD;add(box(W,rowY(NROW-1),Z1-z),carpet,scene,CX,rowY(NROW-1)/2,(z+Z1)/2)}
-{ // seats: two blocks of 11 with a centre aisle
-  const pos=[];for(let r=0;r<NROW;r++)for(let k=0;k<11;k++){pos.push([-6.42+k*.56,ROW0+r*ROWD,rowY(r)],[1.38+k*.56,ROW0+r*ROWD,rowY(r)])}
+{ // seats: one continuous block of 22 per row, side aisles only
+  const pos=[];for(let r=0;r<NROW;r++)for(let k=0;k<22;k++)pos.push([CX-5.88+k*.56,ROW0+r*ROWD,rowY(r)])
   const fab=M('#7c2530',{roughness:.9}),n=pos.length;
   const cu=new THREE.InstancedMesh(box(.5,.1,.45),fab,n),bk=new THREE.InstancedMesh(box(.5,.6,.08),fab,n),bs=new THREE.InstancedMesh(box(.44,.37,.3),dark,n);
   const d=new THREE.Object3D();pos.forEach(([x,z,y],i)=>{d.rotation.set(0,0,0);d.position.set(x,y+.42,z);d.updateMatrix();cu.setMatrixAt(i,d.matrix);
@@ -218,9 +218,9 @@ for(let r=1;r<NROW;r++)add(box(W,rowY(r),ROWD),carpet,scene,CX,rowY(r)/2,ROW0-.5
   for(let i=0;i<N;i++){const h=1.6+2.6*Math.abs(Math.cos(i/(N-1)*Math.PI*3));d.position.set(CX-3.84+i*.16,2.88+h/2,Z0+.55);d.scale.set(1,h,1);d.updateMatrix();pipes.setMatrixAt(i,d.matrix)}
   hall.add(pipes);
   // ceiling reflectors and lighting catwalk
-  const cloud=M('#e9e4d8',{roughness:.9});[-5.2,0,5.2].forEach(dx=>{add(box(4.6,.08,2.6),cloud,upper,CX+dx,7.4,.5,false).rotation.x=.12});
+  const cloud=M('#e9e4d8',{roughness:.9});[-4.4,0,4.4].forEach(dx=>{add(box(4.2,.08,2.6),cloud,upper,CX+dx,7.4,.5,false).rotation.x=.12});
   const cz=5.6,cy=7.3,iron=M('#2a2a2c');add(box(W,.06,1),iron,upper,CX,cy,cz,false);[-.5,.5].forEach(dz=>add(box(W,.05,.05),iron,upper,CX,cy+1,cz+dz,false));
-  for(let i=0;i<8;i++){add(cyl(.11,.13,.3,12),iron,upper,X0+1.5+i*1.86,cy-.3,cz-.5,false).rotation.x=.5}
+  for(let i=0;i<8;i++){add(cyl(.11,.13,.3,12),iron,upper,X0+1.5+i*(W-3)/7,cy-.3,cz-.5,false).rotation.x=.5}
 }
 
 // ---------- Steinway concert grand (2.74 m x 1.57 m) ----------
@@ -260,8 +260,8 @@ function placeProp(){const a=-lidPivot.rotation.x,A=V(-.35,.98,.62),B=V(-.35,.98
 
 // ---------- Stands, recorders, microphones ----------
 const pickables=[pianoG],coneGroup=new THREE.Group(),cableGroup=new THREE.Group(),dimGroup=new THREE.Group();scene.add(coneGroup,cableGroup,dimGroup);
-function tripod(x,z,floorY,topY){const hub=floorY+.38,mid=Math.min(hub+.55,topY);
-  for(let i=0;i<3;i++){const a=i*2.094+.5;rod(V(x,hub,z),V(x+Math.cos(a)*.36,floorY+.012,z+Math.sin(a)*.36),.009,dark,scene)}
+function tripod(x,z,floorY,topY,compact){const hub=floorY+.38,mid=Math.min(hub+.55,topY),zs=compact?.55:1; // compact: legs squeezed to fit between two seat rows
+  for(let i=0;i<3;i++){const a=i*2.094+(compact?Math.PI/2:.5);rod(V(x,hub,z),V(x+Math.cos(a)*.36,floorY+.012,z+Math.sin(a)*.36*zs),.009,dark,scene)}
   rod(V(x,floorY+.1,z),V(x,mid,z),.013,dark,scene);rod(V(x,mid-.05,z),V(x,topY,z),.009,steel,scene);add(cyl(.019,.019,.05,12),dark,scene,x,mid-.02,z)}
 function cone(at,dir,color,len=1.3,rad=.5,flat=1){const geo=new THREE.ConeGeometry(rad,len,40,1,true);geo.translate(0,-len/2,0);geo.rotateX(-Math.PI/2);geo.scale(1,flat,1);
   const m=new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color,transparent:true,opacity:.13,depthWrite:false,side:THREE.DoubleSide}));
@@ -269,7 +269,7 @@ function cone(at,dir,color,len=1.3,rad=.5,flat=1){const geo=new THREE.ConeGeomet
 function rr(w,h,r){const s=new THREE.Shape(),P=Math.PI;s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.absarc(w/2-r,-h/2+r,r,-P/2,0,false);s.lineTo(w/2,h/2-r);s.absarc(w/2-r,h/2-r,r,0,P/2,false);
   s.lineTo(-w/2+r,h/2);s.absarc(-w/2+r,h/2-r,r,P/2,P,false);s.lineTo(-w/2,-h/2+r);s.absarc(-w/2+r,-h/2+r,r,P,P*1.5,false);return s}
 const h6Body=M('#33363b',{roughness:.55,metalness:.2});
-function h6(key,p,floorY,target,color,half=Math.PI/3){ // Zoom H6: 78 x 153 x 48 mm, X/Y capsule at the front
+function h6(key,p,floorY,target,color,half=Math.PI/3,compact=false){ // Zoom H6: 78 x 153 x 48 mm, X/Y capsule at the front
   const g=new THREE.Group();g.position.copy(p);g.userData.key=key;
   add(new THREE.ExtrudeGeometry(rr(.078,.046,.009),{depth:.145,bevelEnabled:true,bevelSize:.003,bevelThickness:.003,bevelSegments:2}),h6Body,g,0,0,-.15);
   add(new THREE.PlaneGeometry(.05,.036),M('#16323a',{emissive:'#2aa6c0',emissiveIntensity:.6}),g,0,.0265,-.115,false).rotation.x=-Math.PI/2;
@@ -281,7 +281,7 @@ function h6(key,p,floorY,target,color,half=Math.PI/3){ // Zoom H6: 78 x 153 x 48
   if(key==='h6a')[-.045,-.085].forEach(z=>{add(cyl(.011,.011,.03,12),dark,g,-.05,0,z,false).rotation.z=Math.PI/2}); // inputs 3 (nearer the mics) and 4, both on the right side
   add(new THREE.SphereGeometry(.014,12,10),dark,g,0,-.036,-.08);
   g.lookAt(target);scene.add(g);g.updateMatrixWorld(true);
-  const b=g.localToWorld(V(0,-.05,-.08));tripod(b.x,b.z,floorY,b.y);
+  const b=g.localToWorld(V(0,-.05,-.08));tripod(b.x,b.z,floorY,b.y,compact);
   const dir=target.clone().sub(p).normalize(),ov=5*Math.PI/180,ch=(half+ov)/2,len=1.9;[1,-1].forEach(s=>cone(p,dir.clone().applyAxisAngle(UP,s*(half-ch)),color,len,len*Math.tan(ch),.4));
   pickables.push(g);return g}
 function c214(key,p,target,color){ // AKG C214: side-address, 160 x 56 mm, in a shock mount
@@ -299,11 +299,11 @@ function c214(key,p,target,color){ // AKG C214: side-address, 160 x 56 mm, in a 
   cone(p.clone().add(V(0,.03,0)),target.clone().sub(p),color);pickables.push(g);return g}
 
 const SEAT_Y=rowY(3);
-const P={h6a:V(0.3,1.5,2.06),c214L:V(3.2,1.5,-0.78),c214R:V(3.2,1.5,0.78),h6b:V(0.3,SEAT_Y+1.5,ROW0+3*ROWD)};
+const P={h6a:V(0.3,1.5,2.06),c214L:V(3.2,1.5,-0.78),c214R:V(3.2,1.5,0.78),h6b:V(0.3,SEAT_Y+1.5,ROW0+3*ROWD-.36)};
 const SWEET=V(0.0,1.3,0.12);
 const gA=h6('h6a',P.h6a,0,SWEET,C.main);
 const gL=c214('c214L',P.c214L,V(0.3,1.1,0),C.pair),gR=c214('c214R',P.c214R,V(0.3,1.1,0),C.pair);
-h6('h6b',P.h6b,SEAT_Y,V(0.3,SEAT_Y+1.5,40),C.room); // faces backward, away from the stage
+h6('h6b',P.h6b,SEAT_Y,V(0.3,SEAT_Y+1.5,40),C.room,Math.PI/3,true); // faces backward, away from the stage
 add(new THREE.SphereGeometry(.05,20,14),new THREE.MeshBasicMaterial({color:C.main}),coneGroup,SWEET.x,SWEET.y,SWEET.z,false);
 {const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints([P.h6a,SWEET]),new THREE.LineDashedMaterial({color:C.main,dashSize:.06,gapSize:.05}));l.computeLineDistances();coneGroup.add(l)}
 
